@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\GatewayControllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\IssueControllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +16,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::prefix("issue")->group(function () {
+    Route::post("make", [IssueControllers::class, "make"]);
+    Route::post("revoke", [IssueControllers::class, "revokeToken"])->middleware(["auth:api"]);
+});
+
+Route::prefix("gateway")->group(function () {
+    Route::get("/go", [GatewayControllers::class, "gatewayGo"]);
 });
