@@ -18,7 +18,7 @@ use Inertia\Inertia;
 */
 
 Route::get("/", function () {
-    return "Hey You !!!!";
-})->name('login');
+    return Inertia::render("Home");
+});
 
 // require __DIR__.'/auth.php';

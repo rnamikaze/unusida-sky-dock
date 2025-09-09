@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DocksControllers;
 use App\Http\Controllers\GatewayControllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -22,7 +23,12 @@ use App\Http\Controllers\IssueControllers;
 
 Route::prefix("issue")->group(function () {
     Route::post("make", [IssueControllers::class, "make"]);
+    Route::post("verify", [IssueControllers::class, "verify"])->middleware(["auth:api"]);
     Route::post("revoke", [IssueControllers::class, "revokeToken"])->middleware(["auth:api"]);
+});
+
+Route::prefix("dock")->group(function () {
+    Route::post("initiate", [DocksControllers::class, "initiate"]);
 });
 
 Route::prefix("gateway")->group(function () {

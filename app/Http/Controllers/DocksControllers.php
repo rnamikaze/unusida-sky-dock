@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\TokenDecks;
-use Laravel\Passport\Token;
 use App\Models\ExternalUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
-class IssueControllers extends Controller
+class DocksControllers extends Controller
 {
     private function sendRequestToAppGate($token, $user, $endpoint)
     {
@@ -50,45 +49,37 @@ class IssueControllers extends Controller
         }
     }
 
-    public function make(Request $request)
+    public function initiate(Request $request)
     {
         $isDebug = env('APP_DEBUG', false);
 
         try {
             $validator = \Validator::make($request->all(), [
                 "sky_dock_key" => "required|string",
-                "email" => "required|string|min:6|max:255",
-                "password" => "required|string|min:8|max:255",
+                "ext_dat_id" => "required|numeric|min:1",
                 "app_name" => "required|string|min:2|max:50"
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    "message" => "failed to authenticate 1"
+                    "message" => $isDebug ? "Failed to authenticate 1" : "Failed!"
                 ], 500);
             }
 
             if (env("SKY_DOCK_KEY", "wow") !== $request->input("sky_dock_key")) {
                 return response()->json([
-                    "message" => "failed to authenticate 2"
+                    "message" => $isDebug ? "Failed to authenticate 2" : "Failed!"
                 ], 500);
             }
 
+            $extId = $request->input('ext_dat_id');
             $appName = $request->input("app_name");
 
             // check
-            $tokenDeck = TokenDecks::where('app_name', $appName)
-                ->where('is_active', true)->first();
+            $localUser = User::where('ext_dat_id', $extId)->first();
 
-            if (!$tokenDeck) {
-                $email = $request->email;
-                $password = $request->password;
-
-                $externalUser = ExternalUser::where('email', $email)->first();
-
-                if (!$externalUser || !Hash::check($password, $externalUser->password)) {
-                    return response()->json(['error' => 'Invalid credentials'], 401);
-                }
+            if (!$localUser) {
+                $externalUser = ExternalUser::where('id', $extId)->first();
 
                 // if valid -> create or sync local user in DB1
                 $localUser = User::updateOrCreate(
@@ -99,7 +90,41 @@ class IssueControllers extends Controller
                         'password' => $externalUser->password, // keep hash synced
                     ]
                 );
+            }
 
+            $allowedApps = [
+                [
+                    "id" => "erabour",
+                    "host" => env("ERABOUR_HOST", null)
+                ]
+            ];
+
+            $appHost = null;
+
+            // Reindex by 'id'
+            $configsById = [];
+            foreach ($allowedApps as $item) {
+                $configsById[$item['id']] = $item;
+            }
+
+            if (isset($configsById[$appName])) {
+                $appHost = $configsById[$appName]["host"];
+            } else {
+                return response()->json([
+                    "message" => $isDebug ? "Failed to authenticate 3" : "Failed!"
+                ], 500);
+            }
+
+            $userAgent = $request->userAgent();
+            $ipAddress = $request->ip();
+
+            $tokenDeck = TokenDecks::where('app_name', $appName)
+                ->where('is_active', true)->where('user_id', $localUser->id)
+                ->where('user_agent', $userAgent)->where('ip_address', $ipAddress)
+                ->where('app_name', $appName)
+                ->first();
+
+            if (!$tokenDeck) {
                 $tokenResult = $localUser->createToken('SkyDock1');
                 // $token = $tokenResult->plainTextToken;
                 $token = $tokenResult->accessToken;
@@ -123,7 +148,7 @@ class IssueControllers extends Controller
                     "ip_address" => request()->ip(),
                 ]);
 
-                $data = $this->sendRequestToAppGate($newTokenDeck, $localUser, "http://localhost:8000/api/gate");
+                $data = $this->sendRequestToAppGate($newTokenDeck, $localUser, "$appHost/api/gate");
 
                 return response()->json([
                     'token' => $token,
@@ -132,17 +157,11 @@ class IssueControllers extends Controller
                 ]);
             }
 
-            // return response()->json([
-            //     'debug' => $tokenDeck
-            // ]);
-
-            $user = User::find($tokenDeck->user_id);
-
-            $data = $this->sendRequestToAppGate($tokenDeck, $user, "http://localhost:8000/api/gate");
+            $data = $this->sendRequestToAppGate($tokenDeck, $localUser, "$appHost/api/gate");
 
             return response()->json([
                 'token' => $tokenDeck->token,
-                'user' => $user,
+                'user' => $localUser,
                 'data' => $data
             ]);
             //code...
@@ -150,64 +169,6 @@ class IssueControllers extends Controller
             return response()->json([
                 "message" => $isDebug ? $th->getMessage() . "|" . $th->getFile() : "Error Happen !",
             ], 500);
-        }
-    }
-
-    public function revokeToken(Request $request)
-    {
-        $isDebug = env('APP_DEBUG', false);
-
-        try {
-            $token = $request->user()->token(); // current token model
-            $token->revoke();
-
-            $tokenId = $token->id;
-
-            TokenDecks::where('oauth_access_token_id', $tokenId)->update([
-                "is_active" => false
-            ]);
-
-            // revoke all token
-            // $request->user()->tokens->each->revoke();
-
-            return response()->json(['message' => 'Token revoked successfully']);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $isDebug ? $th->getMessage() : "Error Happen !",
-            ]);
-        }
-    }
-
-    public function verify(Request $request)
-    {
-        $isDebug = env('APP_DEBUG', false);
-
-        try {
-            $validator = \Validator::make($request->all(), [
-                "sky_dock_key" => "required|string",
-            ]);
-
-            if ($validator->fails()) {
-                return response()->json([
-                    "message" => "failed to authenticate 1"
-                ], 500);
-            }
-
-            if (env("SKY_DOCK_KEY", "wow") !== $request->input("sky_dock_key")) {
-                return response()->json([
-                    "message" => "failed to authenticate 2"
-                ], 500);
-            }
-            $user = $request->user();
-
-            return response()->json([
-                "message" => "okay",
-                "user" => $user
-            ], 200);
-        } catch (\Throwable $th) {
-            return response()->json([
-                "message" => $isDebug ? $th->getMessage() : "Error Happen !",
-            ]);
         }
     }
 }
