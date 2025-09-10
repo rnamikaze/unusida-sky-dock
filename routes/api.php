@@ -22,7 +22,7 @@ use App\Http\Controllers\IssueControllers;
 // });
 
 Route::prefix("issue")->group(function () {
-    Route::post("make", [IssueControllers::class, "make"]);
+    // Route::post("make", [IssueControllers::class, "make"]);
     Route::post("verify", [IssueControllers::class, "verify"])->middleware(["auth:api"]);
     Route::post("revoke", [IssueControllers::class, "revokeToken"])->middleware(["auth:api"]);
 });

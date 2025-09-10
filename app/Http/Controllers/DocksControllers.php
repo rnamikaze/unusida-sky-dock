@@ -21,11 +21,13 @@ class DocksControllers extends Controller
         $user["ip_address"] = $token->ip_address;
 
         try {
+            $key = env("SKY_DOCK_KEY", "wow");
+
             $response = Http::acceptJson()
                 ->post($endpoint, [
                     'user' => json_encode($user),
                     'token' => $token->token,
-                    'key' => "8b125078a2ddf3e76514098cc347dcfd6559233bd97af00da8178cc1eeb0414e"
+                    'key' => $key
                 ]);
 
             // return $response->json();
