@@ -1,9 +1,18 @@
 import ImageLoader from "@/Components/ImageLoader";
-import { Flex } from "@chakra-ui/react";
+import { Button, Flex, Image, Link, Text, Tooltip } from "@chakra-ui/react";
 import "../../css/fonts.css";
-import { Cloud, Globe, KeySquare, MoveRight } from "lucide-react";
+import {
+    Cloud,
+    EqualApproximately,
+    Globe,
+    KeySquare,
+    LogIn,
+    MoveRight,
+} from "lucide-react";
 import { Head } from "@inertiajs/react";
 import SchemaIdeas from "@/Components/SchemaIdeas";
+
+const isDebug = import.meta.env.VITE_APP_DEBUG == "true";
 
 const Home = () => {
     return (
@@ -13,37 +22,166 @@ const Home = () => {
             position={"relative"}
             justifyContent={"center"}
             alignItems={"center"}
-            className="pt-sans-regular"
+            bg={
+                "linear-gradient(to bottom, #021230, #006ef8 , #0043bc, #00153b)"
+            }
         >
             <Head title="Welcome" />
-            <Flex
+            {/* <Flex
                 width={"100vw"}
                 height={"100vh"}
                 position={"fixed"}
                 zIndex={2}
                 bg={"rgba(0,0,0,0.4)"}
-            ></Flex>
+            ></Flex> */}
+
             <Flex
                 zIndex={5}
                 color={"white"}
                 direction={"column"}
                 alignItems={"center"}
+                className="pt-sans-regular"
+                gap={3}
             >
-                <Flex fontSize={"18px"}>Welcome to</Flex>
-                <Flex className="asimovian-regular" fontSize={"60px"}>
-                    SKY DOCK
+                <Flex
+                    bg={"white"}
+                    color={"black"}
+                    height={"70px"}
+                    width={"70px"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    borderRadius={"25px"}
+                >
+                    <EqualApproximately color="#0154bf" size={60} />
+                </Flex>
+                <Flex
+                    direction={"column"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    lineHeight={"3em"}
+                >
+                    <Flex fontSize={"18px"} textTransform={"uppercase"}>
+                        Welcome To
+                    </Flex>
+                    <Flex className="asimovian-regular" fontSize={"60px"}>
+                        SKY DOCK
+                    </Flex>
+                    <Flex>App Data Docking Manager</Flex>
                 </Flex>
 
                 <SchemaIdeas />
-                <Flex>for UNUSIDA</Flex>
+                <Flex
+                    gap={4}
+                    alignItems={"center"}
+                    direction={["column", "column", "row", "row"]}
+                >
+                    <Flex
+                        // width={"300px"}
+                        wordBreak={"break-word"}
+                        textAlign={["center", "center", "left", "left"]}
+                        justifyContent={"center"}
+                        maxWidth={"300px"}
+                    >
+                        <Text display={"inline"}>
+                            What do we do?
+                            <br />
+                            We manage the data transport between apps in the
+                            <div
+                                style={{
+                                    fontWeight: "bold",
+                                    display: "inline",
+                                    padding: "0px 5px",
+                                }}
+                            >
+                                SKY DOCK&trade;
+                            </div>
+                            Registered network.
+                        </Text>
+                    </Flex>
+                    <Flex
+                        direction={"column"}
+                        gap={1}
+                        justifyContent={[
+                            "center",
+                            "center",
+                            "flex-end",
+                            "flex-end",
+                        ]}
+                        alignItems={[
+                            "center",
+                            "center",
+                            "flex-end",
+                            "flex-end",
+                        ]}
+                    >
+                        <Flex fontWeight={"bold"}>Legitimate Admin?</Flex>
+                        {isDebug ? (
+                            <Link href="/dashboard">
+                                <Button
+                                    borderRadius={"8px"}
+                                    rightIcon={<LogIn size={16} />}
+                                    size={["md", "md", "sm", "sm"]}
+                                    width={"max-content"}
+                                    cursor={"pointer"}
+                                >
+                                    Yeah, i'm in
+                                </Button>
+                            </Link>
+                        ) : (
+                            <Tooltip label={"Available Soon"}>
+                                <Button
+                                    borderRadius={"8px"}
+                                    rightIcon={<LogIn size={16} />}
+                                    size={["md", "md", "sm", "sm"]}
+                                    width={"max-content"}
+                                    cursor={"pointer"}
+                                >
+                                    Yeah, i'm in
+                                </Button>
+                            </Tooltip>
+                        )}
+                    </Flex>
+                </Flex>
             </Flex>
-            <Flex
+            {/* <Flex
                 width={"100vw"}
                 height={"100vh"}
                 position={"fixed"}
                 zIndex={0}
             >
                 <ImageLoader imageUrl={"storage/images/main-bg.jpg"} />
+            </Flex> */}
+            <Flex
+                position={"fixed"}
+                bottom={"0px"}
+                width={"100%"}
+                justifyContent={"center"}
+                color={"white"}
+                pb={2}
+                fontWeight={"600"}
+                fontSize={["13px", "13px", "14px", "14px"]}
+            >
+                <Flex>
+                    Gifted & Operated by{" "}
+                    <Link
+                        px={1}
+                        textDecoration={[
+                            "underline",
+                            "underline",
+                            "none",
+                            "none",
+                        ]}
+                        _hover={{
+                            textDecoration: "underline",
+                        }}
+                        href="https://www.sparklabz.cloud"
+                        isExternal
+                    >
+                        SPARKLABZ.CLOUD
+                    </Link>{" "}
+                    &copy;
+                    {new Date().getFullYear()}
+                </Flex>
             </Flex>
         </Flex>
     );

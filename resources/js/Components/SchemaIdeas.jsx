@@ -1,7 +1,22 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, useBoolean } from "@chakra-ui/react";
 import { Cloud, Globe, KeySquare, MoveRight } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
+    const [cloudHovered, setCloudHovered] = useBoolean(false);
+    const [dockInHovered, setDockInHovered] = useBoolean(false);
+    const [appHovered, setAppHovered] = useBoolean(false);
+
+    const [value, setValue] = useState(1);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setValue((prev) => (prev >= 3 ? 1 : prev + 1));
+        }, 2000); // every 3 seconds
+
+        return () => clearInterval(interval); // cleanup
+    }, []);
+
     return (
         <Flex
             gap={"10px"}
@@ -27,6 +42,23 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         borderColor={"white"}
                         justifyContent={"center"}
                         alignItems={"center"}
+                        bg={"white"}
+                        color="#0154bf"
+                        style={
+                            value == 2
+                                ? {
+                                      transform: "scale(1.1)",
+                                      filter: "drop-shadow(0 0 20px white)",
+                                  }
+                                : null
+                        }
+                        _hover={{
+                            transform: "scale(1.1)",
+                            filter: "drop-shadow(0 0 20px white)",
+                        }}
+                        transition={"250ms ease-out"}
+                        onMouseEnter={setCloudHovered.on}
+                        onMouseLeave={setCloudHovered.off}
                     >
                         <Cloud size={70} />
                     </Flex>
@@ -43,6 +75,23 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         borderColor={"white"}
                         justifyContent={"center"}
                         alignItems={"center"}
+                        bg={"white"}
+                        color="#0154bf"
+                        style={
+                            value == 1
+                                ? {
+                                      transform: "scale(1.1)",
+                                      filter: "drop-shadow(0 0 20px white)",
+                                  }
+                                : null
+                        }
+                        _hover={{
+                            transform: "scale(1.1)",
+                            filter: "drop-shadow(0 0 20px white)",
+                        }}
+                        transition={"250ms ease-out"}
+                        onMouseEnter={setDockInHovered.on}
+                        onMouseLeave={setDockInHovered.off}
                     >
                         <KeySquare size={44} />
                     </Flex>
@@ -53,8 +102,23 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                     position={"relative"}
                     top={"-50px"}
                     left={"-5px"}
-                    transform={"rotate(-35deg)"}
-                    opacity={0.6}
+                    transform={`rotate(-35deg) ${
+                        dockInHovered ||
+                        cloudHovered ||
+                        value == 1 ||
+                        value == 2
+                            ? "scale(1.2)"
+                            : ""
+                    }`}
+                    opacity={
+                        dockInHovered ||
+                        cloudHovered ||
+                        value == 1 ||
+                        value == 2
+                            ? 1
+                            : 0.6
+                    }
+                    transition={"250ms ease-out"}
                 >
                     <MoveRight size={40} />
                 </Flex>
@@ -64,7 +128,17 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                     alignItems={"center"}
                     // height={"60px"}
                     gap={3}
-                    opacity={0.6}
+                    transform={`${
+                        dockInHovered || appHovered || value == 1 || value == 3
+                            ? "scale(1.2)"
+                            : ""
+                    }`}
+                    opacity={
+                        dockInHovered || appHovered || value == 1 || value == 3
+                            ? 1
+                            : 0.6
+                    }
+                    transition={"250ms ease-out"}
                 >
                     <MoveRight size={40} />
                 </Flex>
@@ -73,8 +147,20 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                     position={"relative"}
                     top={"-50px"}
                     left={"0px"}
-                    transform={"rotate(35deg)"}
-                    opacity={0.6}
+                    transform={`rotate(35deg) ${
+                        cloudHovered || appHovered || value == 3 || value == 2
+                            ? "scale(1.2)"
+                            : ""
+                    }`}
+                    opacity={
+                        cloudHovered || appHovered || value == 3 || value == 2
+                            ? 1
+                            : 0.6
+                    }
+                    transition={"250ms ease-out"}
+                    // style={{
+                    //     filter: "drop-shadow(0 0 10px white)",
+                    // }}
                 >
                     <MoveRight size={40} />
                 </Flex>
@@ -87,6 +173,23 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         borderColor={"white"}
                         justifyContent={"center"}
                         alignItems={"center"}
+                        bg={"white"}
+                        color="#0154bf"
+                        style={
+                            value == 3
+                                ? {
+                                      transform: "scale(1.1)",
+                                      filter: "drop-shadow(0 0 20px white)",
+                                  }
+                                : null
+                        }
+                        _hover={{
+                            transform: "scale(1.1)",
+                            filter: "drop-shadow(0 0 20px white)",
+                        }}
+                        transition={"250ms ease-out"}
+                        onMouseEnter={setAppHovered.on}
+                        onMouseLeave={setAppHovered.off}
                     >
                         <Globe size={44} />
                     </Flex>
