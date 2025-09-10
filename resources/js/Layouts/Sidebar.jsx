@@ -65,14 +65,6 @@ const Sidebar = ({
                 </Flex>
             </Flex>
             <Flex
-                justifyContent={"center"}
-                fontSize={"12px"}
-                fontWeight={"bold"}
-                // fontStyle={"italic"}
-            >
-                _ For UNUSIDA _
-            </Flex>
-            <Flex
                 height={"3px"}
                 width={"100%"}
                 bg={"linear-gradient(to right, #161b34, #4c5063, #161b34)"}
