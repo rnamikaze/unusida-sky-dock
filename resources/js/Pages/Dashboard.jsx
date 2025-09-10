@@ -4,9 +4,12 @@ import "../../css/fonts.css";
 import {
     ArrowDownUp,
     CircleUserRound,
+    Clover,
     House,
     LayoutGrid,
+    Leaf,
     Menu,
+    Sprout,
     UserRoundCheck,
     UsersRound,
 } from "lucide-react";
@@ -17,6 +20,11 @@ import SchemaIdeas from "@/Components/SchemaIdeas";
 import UserRound from "@/Components/UserRound";
 
 const sidebarItem = [
+    {
+        id: 6,
+        title: "Welcome",
+        icon: <Leaf size={20} />,
+    },
     {
         id: 1,
         title: "Dashboard",
@@ -47,9 +55,9 @@ const Dashboard = () => {
     const [sidebarExpand, setSidebarExpand] = useState(false);
 
     const [viewActive, setViewActive] = useState({
-        id: 1,
-        title: "Dashboard",
-        icon: <House size={20} />,
+        id: 6,
+        title: "Welcome",
+        icon: <Leaf size={20} />,
     });
 
     const handleViewActiveChange = (item) => {
