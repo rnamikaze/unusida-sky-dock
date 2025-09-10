@@ -1,0 +1,173 @@
+import Sidebar from "@/Layouts/Sidebar";
+import { Flex } from "@chakra-ui/react";
+import "../../css/fonts.css";
+import {
+    ArrowDownUp,
+    CircleUserRound,
+    House,
+    LayoutGrid,
+    Menu,
+    UserRoundCheck,
+    UsersRound,
+} from "lucide-react";
+import { useState } from "react";
+import { Head } from "@inertiajs/react";
+import DashboardPane from "@/Layouts/DashboardPane";
+import SchemaIdeas from "@/Components/SchemaIdeas";
+import UserRound from "@/Components/UserRound";
+
+const sidebarItem = [
+    {
+        id: 1,
+        title: "Dashboard",
+        icon: <House size={20} />,
+    },
+    {
+        id: 2,
+        title: "Traffic Log",
+        icon: <ArrowDownUp size={20} />,
+    },
+    {
+        id: 5,
+        title: "Session",
+        icon: <UserRoundCheck size={20} />,
+    },
+    {
+        id: 3,
+        title: "Users",
+        icon: <UsersRound size={20} />,
+    },
+    {
+        id: 4,
+        title: "Apps",
+        icon: <LayoutGrid size={20} />,
+    },
+];
+const Dashboard = () => {
+    const [sidebarExpand, setSidebarExpand] = useState(false);
+
+    const [viewActive, setViewActive] = useState({
+        id: 1,
+        title: "Dashboard",
+        icon: <House size={20} />,
+    });
+
+    const handleViewActiveChange = (item) => {
+        setViewActive(item);
+        setSidebarExpand(false);
+    };
+
+    const renderView = () => {
+        const viewCode = viewActive?.id || 1;
+
+        switch (viewCode) {
+            case 1:
+                return <DashboardPane viewActive={viewActive} />;
+
+            default:
+                return (
+                    <Flex
+                        flexGrow={1}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        width={"100%"}
+                        direction={"column"}
+                    >
+                        <Flex>Welcome to</Flex>
+                        <Flex className="asimovian-regular" fontSize={"30px"}>
+                            SKY DOCK
+                        </Flex>
+                        <Flex
+                            // bg={"yellow"}
+                            justifyContent={"center"}
+                            width={"100%"}
+                        >
+                            <SchemaIdeas zoom={["0.6", "0.9"]} />
+                        </Flex>
+                    </Flex>
+                );
+        }
+    };
+
+    return (
+        <Flex
+            width={"100vw"}
+            height={"100vh"}
+            bg={
+                "linear-gradient(to bottom, #021230, #006ef8 , #0043bc, #00153b)"
+            }
+            px={2}
+            py={2}
+            className="pt-sans-regular"
+            position={"relative"}
+        >
+            <Head title={viewActive.title} />
+            <Sidebar
+                viewActive={viewActive}
+                handleViewActiveChange={handleViewActiveChange}
+                sidebarItem={sidebarItem}
+                sidebarExpand={sidebarExpand}
+                setSidebarExpand={setSidebarExpand}
+            />
+            <Flex
+                color={"white"}
+                px={[0, 0, "20px", "20px"]}
+                flexGrow={1}
+                direction={"column"}
+            >
+                <Flex
+                    height={"50px"}
+                    // borderBottom={"1px"}
+                    // borderBottomColor={"white"}
+                    width={"100%"}
+                    alignItems={"center"}
+                    justifyContent={[
+                        "space-between",
+                        "space-between",
+                        "flex-end",
+                        "flex-end",
+                    ]}
+                    // direction={"column"}
+                    bg={[
+                        "linear-gradient(to bottom, #050b26, #071333)",
+                        "linear-gradient(to bottom, #050b26, #071333)",
+                        "transparent",
+                        "transparent",
+                    ]}
+                    borderRadius={"10px"}
+                >
+                    <Flex
+                        width={"50px"}
+                        height={"50px"}
+                        justifyContent={"center"}
+                        alignItems={"center"}
+                        onClick={() => {
+                            setSidebarExpand((p) => !p);
+                        }}
+                        cursor={"pointer"}
+                        display={["flex", "flex", "none", "none"]}
+                    >
+                        <Menu size={20} />
+                    </Flex>
+                    <UserRound
+                        user={{
+                            name: "Proton Guard",
+                            email: "rnamikaze@proton.me",
+                        }}
+                    />
+                </Flex>
+                <Flex
+                    flexGrow={1}
+                    mt={[3, 3, 0, 0]}
+                    px={[1, 1, 0, 0]}
+                    direction={"column"}
+                    width={"100%"}
+                >
+                    {renderView()}
+                </Flex>
+            </Flex>
+        </Flex>
+    );
+};
+
+export default Dashboard;
