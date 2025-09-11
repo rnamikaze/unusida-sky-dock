@@ -2,9 +2,11 @@
 
 namespace App\Exceptions;
 
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Throwable;
+use Inertia\Inertia;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -35,6 +37,44 @@ class Handler extends ExceptionHandler
             return response()->json(['message' => 'Unauthenticated'], 401);
         }
 
-        return redirect()->guest(route('login'));
+        return redirect()->guest(route('home'));
+    }
+
+    public function render($request, Throwable $exception)
+    {
+        if ($exception instanceof HttpExceptionInterface) {
+            $status = $exception->getStatusCode();
+
+            \Log::info('User stuck: ', [
+                'status' => $status,
+                'message' => $exception->getMessage()
+            ]);
+
+            return Inertia::render('Home', [
+                'status' => $status,
+                'message' => $this->defaultMessage($status),
+                // HTTP method on this route.
+                // $exception->getMessage() ?:
+            ])->toResponse($request);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+
+    private function defaultMessage($status)
+    {
+        return match ($status) {
+            400 => 'Bad Request',
+            401 => 'Unauthorized',
+            403 => 'Forbidden',
+            404 => 'Page Not Found',
+            405 => 'Method Not Allowed',
+            419 => 'Page Expired',
+            429 => 'Too Many Requests',
+            500 => 'Server Error',
+            503 => 'Service Unavailable',
+            default => 'Something went wrong',
+        };
     }
 }

@@ -1,5 +1,20 @@
 import ImageLoader from "@/Components/ImageLoader";
-import { Button, Flex, Image, Link, Text, Tooltip } from "@chakra-ui/react";
+import {
+    Button,
+    Flex,
+    Image,
+    Link,
+    Text,
+    Tooltip,
+    Modal,
+    ModalOverlay,
+    ModalContent,
+    ModalHeader,
+    ModalFooter,
+    ModalBody,
+    ModalCloseButton,
+    useDisclosure,
+} from "@chakra-ui/react";
 import "../../css/fonts.css";
 import "../../css/style.css";
 import {
@@ -12,10 +27,20 @@ import {
 } from "lucide-react";
 import { Head } from "@inertiajs/react";
 import SchemaIdeas from "@/Components/SchemaIdeas";
+import { useEffect } from "react";
 
 const isDebug = import.meta.env.VITE_APP_DEBUG == "true";
 
-const Home = () => {
+const Home = ({ message }) => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    useEffect(() => {
+        if (message) {
+            setTimeout(() => {
+                onOpen();
+            }, 1000);
+        }
+    }, [message]);
     return (
         <Flex
             width={"100vw"}
@@ -37,6 +62,32 @@ const Home = () => {
                 zIndex={2}
                 bg={"rgba(0,0,0,0.4)"}
             ></Flex> */}
+
+            <Modal isOpen={isOpen} onClose={onClose}>
+                <ModalOverlay />
+                <ModalContent
+                    bg={"transparent"}
+                    className="white-glass"
+                    color={"white"}
+                    mx={"15px"}
+                    borderRadius={"16px"}
+                    mt={"20vh"}
+                >
+                    <ModalHeader>Not Allowed</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>{message}</ModalBody>
+
+                    <ModalFooter>
+                        <Button
+                            size={"sm"}
+                            colorScheme="gray"
+                            onClick={onClose}
+                        >
+                            Close
+                        </Button>
+                    </ModalFooter>
+                </ModalContent>
+            </Modal>
 
             <Flex
                 zIndex={5}

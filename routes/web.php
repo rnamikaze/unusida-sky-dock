@@ -20,7 +20,7 @@ use App\Http\Controllers\ProfileController;
 
 Route::get("/", function () {
     return Inertia::render("Home");
-});
+})->name("home");
 
 Route::get("/dashboard", [PageControllers::class, "dashboard"]);
 
