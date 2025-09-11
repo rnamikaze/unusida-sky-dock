@@ -1,6 +1,7 @@
 import ImageLoader from "@/Components/ImageLoader";
 import { Button, Flex, Image, Link, Text, Tooltip } from "@chakra-ui/react";
 import "../../css/fonts.css";
+import "../../css/style.css";
 import {
     Cloud,
     EqualApproximately,
@@ -18,13 +19,15 @@ const Home = () => {
     return (
         <Flex
             width={"100vw"}
-            height={"100vh"}
+            minHeight={"100vh"}
+            overflowY={"auto"}
             position={"relative"}
             justifyContent={"center"}
             alignItems={"center"}
             bg={
                 "linear-gradient(to bottom, #021230, #006ef8 , #0043bc, #00153b)"
             }
+            pb={"100px"}
         >
             <Head title="Welcome" />
             {/* <Flex
@@ -44,6 +47,7 @@ const Home = () => {
                 gap={3}
             >
                 <Flex
+                    mt={"70px"}
                     bg={"white"}
                     color={"black"}
                     height={"70px"}
@@ -161,7 +165,7 @@ const Home = () => {
                 fontWeight={"600"}
                 fontSize={["13px", "13px", "14px", "14px"]}
             >
-                <Flex>
+                <Flex px={2} className="white-glass ">
                     Gifted & Operated by{" "}
                     <Link
                         px={1}
