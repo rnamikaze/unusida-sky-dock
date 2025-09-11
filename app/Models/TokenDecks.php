@@ -25,4 +25,14 @@ class TokenDecks extends Model
     {
         return $this->belongsTo(TokenDecks::class, 'oauth_access_token_id', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(TokenDecks::class, 'user_id', 'id');
+    }
+
+    public function attempts()
+    {
+        return $this->hasMany(AttemptLog::class, 'token_id', 'id');
+    }
 }

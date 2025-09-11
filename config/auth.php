@@ -44,6 +44,10 @@ return [
             'driver' => 'passport',
             'provider' => 'users',
         ],
+        'admin' => [ // <-- new guard
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -67,6 +71,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+
+        'admins' => [ // <-- new provider
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class, // We'll make this model next
         ],
 
         // 'users' => [

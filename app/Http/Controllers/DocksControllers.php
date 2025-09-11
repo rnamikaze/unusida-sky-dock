@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AttemptLog;
 use App\Models\User;
 use App\Models\TokenDecks;
 use App\Models\ExternalUser;
@@ -223,6 +224,13 @@ class DocksControllers extends Controller
 
             $data = $this->sendRequestToAppGate($tokenDeck, $localUser, "$appHost/api/gate", $appKey);
 
+            $attempt = AttemptLog::create([
+                "user_id" => $localUser->id,
+                "token_id" => $tokenDeck->id,
+                "action" => "allowed",
+                "event" => "initiate"
+            ]);
+
             return response()->json([
                 'token' => $tokenDeck->token,
                 'user' => $localUser,
@@ -326,9 +334,20 @@ class DocksControllers extends Controller
                     // ];
                     $data = $response->json();
 
+                    $token = TokenDecks::where("special_id", $data['special_id'])
+                        ->select('id', 'user_id')->first();
+
+                    $attempt = AttemptLog::create([
+                        "user_id" => $token->user_id,
+                        "token_id" => $token->id,
+                        "action" => "allowed",
+                        "event" => "prepare"
+                    ]);
+
                     return response()->json([
                         "success" => true,
-                        "special_id" => $data['special_id']
+                        "special_id" => $data['special_id'],
+                        // "debug" => $token
                     ], 200);
                 } elseif (str_contains($contentType, 'text/html')) {
                     // Likely Cloudflare page or some error HTML

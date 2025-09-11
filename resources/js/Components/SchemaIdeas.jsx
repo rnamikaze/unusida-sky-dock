@@ -35,12 +35,16 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
             <Flex width={"100%"} justifyContent={"center"}>
                 <Flex direction={"column"} alignItems={"center"} gap={2}>
                     <Flex
-                        borderTopRadius={"16px"}
-                        borderBottomRadius={"full"}
+                        // borderTopRadius={"16px"}
+                        borderRadius={"full"}
                         width={"100px"}
                         height={"100px"}
-                        border={"4px"}
-                        borderColor={"white"}
+                        // border={"4px"}
+                        // borderColor={"white"}
+                        // borderLeft={"4px"}
+                        // borderRight={"4px"}
+                        // borderColor={"#7b4019"}
+                        borderStyle={"dotted"}
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
@@ -50,8 +54,13 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                                 ? {
                                       transform: "scale(1.1)",
                                       filter: "drop-shadow(0 0 20px white)",
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
                                   }
-                                : null
+                                : {
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
+                                  }
                         }
                         _hover={{
                             transform: "scale(1.1)",
@@ -69,12 +78,16 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
             <Flex gap={"10px"} width={"100%"} justifyContent={"space-between"}>
                 <Flex direction={"column"} gap={2} alignItems={"center"}>
                     <Flex
-                        borderTopRadius={"16px"}
-                        borderBottomRadius={"full"}
+                        // borderTopRadius={"16px"}
+                        borderRadius={"full"}
                         width={"80px"}
                         height={"80px"}
-                        border={"4px"}
-                        borderColor={"white"}
+                        // border={"4px"}
+                        // borderColor={"white"}
+                        // borderLeft={"4px"}
+                        // borderRight={"4px"}
+                        // borderColor={"#7b4019"}
+                        borderStyle={"dotted"}
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
@@ -84,8 +97,13 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                                 ? {
                                       transform: "scale(1.1)",
                                       filter: "drop-shadow(0 0 20px white)",
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
                                   }
-                                : null
+                                : {
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
+                                  }
                         }
                         _hover={{
                             transform: "scale(1.1)",
@@ -168,12 +186,16 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                 </Flex>
                 <Flex direction={"column"} gap={2} alignItems={"center"}>
                     <Flex
-                        borderTopRadius={"16px"}
-                        borderBottomRadius={"full"}
+                        // borderTopRadius={"16px"}
+                        borderRadius={"full"}
                         width={"80px"}
                         height={"80px"}
-                        border={"4px"}
-                        borderColor={"white"}
+                        // border={"4px"}
+                        // borderColor={"white"}
+                        // borderLeft={"4px"}
+                        // borderRight={"4px"}
+                        // borderColor={"#7b4019"}
+                        borderStyle={"dotted"}
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
@@ -183,8 +205,13 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                                 ? {
                                       transform: "scale(1.1)",
                                       filter: "drop-shadow(0 0 20px white)",
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
                                   }
-                                : null
+                                : {
+                                      borderLeft: "6px dotted #7b4019",
+                                      borderRight: "6px dotted #7b4019",
+                                  }
                         }
                         _hover={{
                             transform: "scale(1.1)",

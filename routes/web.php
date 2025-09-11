@@ -22,6 +22,6 @@ Route::get("/", function () {
     return Inertia::render("Home");
 })->name("home");
 
-Route::get("/dashboard", [PageControllers::class, "dashboard"]);
+Route::get("/dashboard", [PageControllers::class, "dashboard"])->middleware(["auth:admin"])->name('login');
 
-// require __DIR__.'/auth.php';
+require __DIR__ . '/web/users.php';

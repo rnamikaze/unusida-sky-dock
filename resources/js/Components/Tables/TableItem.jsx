@@ -1,9 +1,15 @@
+import { formatTimestamp } from "@/Functions/dateOps";
 import { Divider, Flex } from "@chakra-ui/react";
-import { OctagonMinus, TrendingUpDown } from "lucide-react";
+import {
+    ClockArrowUp,
+    Network,
+    OctagonMinus,
+    TrendingUpDown,
+} from "lucide-react";
 
 const tableWidth = ["10%", "10%", "40%", "30%", "10%"];
 
-const TableItem = () => {
+const TableItem = ({ item, from, index }) => {
     return (
         <Flex
             width={"100%"}
@@ -22,7 +28,7 @@ const TableItem = () => {
                     px={2}
                     fontWeight={"bold"}
                 >
-                    1
+                    {from + index}
                 </Flex>
                 <Flex
                     width={tableWidth[1]}
@@ -30,7 +36,7 @@ const TableItem = () => {
                     maxWidth={tableWidth[1]}
                     px={2}
                 >
-                    1
+                    {item.ext_dat_id}
                 </Flex>
                 <Flex
                     width={tableWidth[2]}
@@ -38,7 +44,7 @@ const TableItem = () => {
                     maxWidth={tableWidth[2]}
                     px={2}
                 >
-                    Yusuf
+                    {item.name}
                 </Flex>
                 <Flex
                     width={tableWidth[3]}
@@ -46,7 +52,7 @@ const TableItem = () => {
                     maxWidth={tableWidth[3]}
                     px={2}
                 >
-                    Bagus
+                    {item.email}
                 </Flex>
                 <Flex
                     width={tableWidth[4]}
@@ -58,12 +64,17 @@ const TableItem = () => {
                 </Flex>
             </Flex>
             <Divider borderColor={"#9c9c9aff"} />
-            <Flex py={1} justifyContent={"space-around"}>
+            <Flex py={1} justifyContent={"flex-start"} px={2}>
                 <Flex px={2} alignItems={"center"} gap={2}>
                     <TrendingUpDown size={16} /> Traffic Request Allowed
                 </Flex>
                 <Flex px={2} alignItems={"center"} gap={2}>
-                    <OctagonMinus size={16} /> Traffic Request Blocked
+                    <ClockArrowUp size={16} /> Last Attempt&nbsp;
+                    {formatTimestamp(item?.attempt_latest?.created_at)}
+                </Flex>
+                <Flex px={2} alignItems={"center"} gap={2}>
+                    <Network size={16} /> Last IP{" "}
+                    {item?.token_decks_latest?.ip_address || "N/A"}
                 </Flex>
             </Flex>
         </Flex>

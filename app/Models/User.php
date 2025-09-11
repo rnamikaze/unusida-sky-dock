@@ -50,4 +50,24 @@ class User extends Authenticatable
     {
         return $this->belongsTo(ExternalUser::class, 'ext_dat_id', 'id');
     }
+
+    public function tokenDecks()
+    {
+        return $this->hasMany(TokenDecks::class, 'user_id', 'id');
+    }
+
+    public function tokenDecksLatest()
+    {
+        return $this->hasOne(TokenDecks::class, 'user_id', 'id')->latestOfMany();
+    }
+
+    public function attempts()
+    {
+        return $this->hasMany(AttemptLog::class, 'user_id', 'id');
+    }
+
+    public function attemptLatest()
+    {
+        return $this->hasOne(AttemptLog::class, 'user_id', 'id')->latestOfMany();
+    }
 }
