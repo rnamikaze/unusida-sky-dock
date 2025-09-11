@@ -13,7 +13,32 @@ use Illuminate\Support\Str;
 
 class DocksControllers extends Controller
 {
-    private function sendRequestToAppGate($token, $user, $endpoint)
+    public $allowedApps;
+    public $recognizedIssuer;
+
+    public function __construct()
+    {
+        $this->allowedApps = [
+            [
+                "id" => "erabour",
+                "host" => env("ERABOUR_HOST", null),
+                "key" => env("ERABOUR_GATE_KEY")
+            ],
+            [
+                "id" => "room-system",
+                "host" => env("ROOM_SYSTEM_HOST", null),
+                "key" => env("ROOM_SYSTEM_KEY")
+            ],
+        ];
+        $this->recognizedIssuer = [
+            [
+                "id" => "unusida_sso",
+                "host" => "http://localhost:8003"
+            ]
+        ];
+    }
+
+    private function sendRequestToAppGate($token, $user, $endpoint, $key)
     {
         // withToken($yourToken)
         //     ->
@@ -21,14 +46,13 @@ class DocksControllers extends Controller
         $user["user_agent"] = $token->user_agent;
         $user["ip_address"] = $token->ip_address;
         $user["special_id"] = $token->special_id;
-        $appGateKey = env("ERABOUR_GATE_KEY");
 
         try {
             $response = Http::acceptJson()
                 ->post($endpoint, [
                     'user' => json_encode($user),
                     'token' => $token->token,
-                    'key' => $appGateKey
+                    'key' => $key
                 ]);
 
             // return $response->json();
@@ -38,7 +62,8 @@ class DocksControllers extends Controller
             if (str_contains($contentType, 'application/json')) {
                 return [
                     'success' => true,
-                    'response' => $response->json()
+                    'response' => $response->json(),
+                    // 'error' => $endpoint
                 ];
             } elseif (str_contains($contentType, 'text/html')) {
                 // Likely Cloudflare page or some error HTML
@@ -113,23 +138,18 @@ class DocksControllers extends Controller
             }
 
             // =>
-            $allowedApps = [
-                [
-                    "id" => "erabour",
-                    "host" => env("ERABOUR_HOST", null)
-                ]
-            ];
-
             $appHost = null;
+            $appKey = null;
 
             // Reindex by 'id'
             $configsById = [];
-            foreach ($allowedApps as $item) {
+            foreach ($this->allowedApps as $item) {
                 $configsById[$item['id']] = $item;
             }
 
             if (isset($configsById[$appName])) {
                 $appHost = $configsById[$appName]["host"];
+                $appKey = $configsById[$appName]["key"];
             } else {
                 return response()->json([
                     "message" => $isDebug ? "Failed to authenticate 3" : "Failed!"
@@ -137,18 +157,11 @@ class DocksControllers extends Controller
             }
 
             // =>
-            $recognizedIssuer = [
-                [
-                    "id" => "unusida_sso",
-                    "host" => "http://localhost:8003"
-                ]
-            ];
-
             $selectedIssuer = null;
 
             // Reindex by 'id'
             $issuerById = [];
-            foreach ($recognizedIssuer as $item) {
+            foreach ($this->recognizedIssuer as $item) {
                 $issuerById[$item['id']] = $item;
             }
 
@@ -199,7 +212,7 @@ class DocksControllers extends Controller
                     "issuer" => $issuer,
                 ]);
 
-                $data = $this->sendRequestToAppGate($newTokenDeck, $localUser, "$appHost/api/gate");
+                $data = $this->sendRequestToAppGate($newTokenDeck, $localUser, "$appHost/api/gate", $appKey);
 
                 return response()->json([
                     'token' => $token,
@@ -208,7 +221,7 @@ class DocksControllers extends Controller
                 ]);
             }
 
-            $data = $this->sendRequestToAppGate($tokenDeck, $localUser, "$appHost/api/gate");
+            $data = $this->sendRequestToAppGate($tokenDeck, $localUser, "$appHost/api/gate", $appKey);
 
             return response()->json([
                 'token' => $tokenDeck->token,
@@ -253,17 +266,9 @@ class DocksControllers extends Controller
             $appHost = null;
 
             // =>
-            $allowedApps = [
-                [
-                    "id" => "erabour",
-                    "host" => env("ERABOUR_HOST"),
-                    "key" => env("ERABOUR_GATE_KEY")
-                ]
-            ];
-
             // Reindex by 'id'
             $configsById = [];
-            foreach ($allowedApps as $item) {
+            foreach ($this->allowedApps as $item) {
                 $configsById[$item['id']] = $item;
             }
 
@@ -277,18 +282,11 @@ class DocksControllers extends Controller
             }
 
             // =>
-            $recognizedIssuer = [
-                [
-                    "id" => "unusida_sso",
-                    "host" => "http://localhost:8003"
-                ]
-            ];
-
             $selectedIssuer = null;
 
             // Reindex by 'id'
             $issuerById = [];
-            foreach ($recognizedIssuer as $item) {
+            foreach ($this->recognizedIssuer as $item) {
                 $issuerById[$item['id']] = $item;
             }
 
