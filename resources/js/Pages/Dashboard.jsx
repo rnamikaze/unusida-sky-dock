@@ -18,6 +18,7 @@ import { Head } from "@inertiajs/react";
 import DashboardPane from "@/Layouts/DashboardPane";
 import SchemaIdeas from "@/Components/SchemaIdeas";
 import UserRound from "@/Components/UserRound";
+import Users from "@/Layouts/Users";
 
 const sidebarItem = [
     {
@@ -71,6 +72,9 @@ const Dashboard = () => {
         switch (viewCode) {
             case 1:
                 return <DashboardPane viewActive={viewActive} />;
+
+            case 3:
+                return <Users viewActive={viewActive} />;
 
             default:
                 return (
@@ -159,7 +163,7 @@ const Dashboard = () => {
                     </Flex>
                     <UserRound
                         user={{
-                            name: "Proton Guard",
+                            name: "Fitzgerald Kenedy",
                             email: "rnamikaze@proton.me",
                         }}
                     />
