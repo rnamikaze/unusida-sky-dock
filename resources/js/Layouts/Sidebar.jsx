@@ -14,7 +14,7 @@ const Sidebar = ({
         <Flex
             height={"100%"}
             width={"250px"}
-            bg={"linear-gradient(to bottom, #050b26, #071333)"}
+            bg={"linear-gradient(to bottom, #261805ff, #332407ff)"}
             borderRadius={"16px"}
             direction={"column"}
             color={"white"}
@@ -67,7 +67,9 @@ const Sidebar = ({
             <Flex
                 height={"3px"}
                 width={"100%"}
-                bg={"linear-gradient(to right, #161b34, #4c5063, #161b34)"}
+                bg={
+                    "linear-gradient(to right, #342b16ff, #63594cff, #342f16ff)"
+                }
             ></Flex>
             <Flex
                 flexGrow={1}

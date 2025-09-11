@@ -102,7 +102,7 @@ const Dashboard = () => {
             width={"100vw"}
             height={"100vh"}
             bg={
-                "linear-gradient(to bottom, #021230, #006ef8 , #0043bc, #00153b)"
+                "linear-gradient(to bottom, #7B4019, #FF9A00 , #D96F32, #7B4019)"
             }
             px={2}
             py={2}

@@ -5,7 +5,7 @@ const SidebarItem = ({ item, handleViewActiveChange, viewActive }) => {
 
     return (
         <Flex
-            bg={isActive ? "#1a1f37" : "transparent"}
+            bg={isActive ? "#482610ff" : "transparent"}
             px={4}
             py={3}
             // height={"40px"}
@@ -22,8 +22,8 @@ const SidebarItem = ({ item, handleViewActiveChange, viewActive }) => {
                 height={"30px"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                bg={isActive ? "#0075fe" : "#191e36"}
-                color={isActive ? "white" : "#0075fe"}
+                bg={isActive ? "#FF7D29" : "#482610ff"}
+                color={isActive ? "white" : "#FF7D29"}
                 borderRadius={"10px"}
             >
                 {item.icon}

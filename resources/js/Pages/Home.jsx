@@ -50,7 +50,7 @@ const Home = ({ message }) => {
             justifyContent={"center"}
             alignItems={"center"}
             bg={
-                "linear-gradient(to bottom, #021230, #006ef8 , #0043bc, #00153b)"
+                "linear-gradient(to bottom, #7B4019, #FF9A00 , #D96F32, #7B4019)"
             }
             pb={"100px"}
         >
@@ -107,7 +107,7 @@ const Home = ({ message }) => {
                     alignItems={"center"}
                     borderRadius={"25px"}
                 >
-                    <EqualApproximately color="#0154bf" size={60} />
+                    <EqualApproximately color="#7B4019" size={60} />
                 </Flex>
                 <Flex
                     direction={"column"}
@@ -121,7 +121,7 @@ const Home = ({ message }) => {
                     <Flex className="asimovian-regular" fontSize={"60px"}>
                         EMPIRE WAY
                     </Flex>
-                    <Flex>We're going RIGHT, always.</Flex>
+                    <Flex>Together we Advance in RIGHT way.</Flex>
                 </Flex>
 
                 <SchemaIdeas />
@@ -178,6 +178,7 @@ const Home = ({ message }) => {
                                     size={["md", "md", "sm", "sm"]}
                                     width={"max-content"}
                                     cursor={"pointer"}
+                                    colorScheme="orange"
                                 >
                                     Yeah, i'm in
                                 </Button>
@@ -190,6 +191,7 @@ const Home = ({ message }) => {
                                     size={["md", "md", "sm", "sm"]}
                                     width={"max-content"}
                                     cursor={"pointer"}
+                                    colorScheme="orange"
                                 >
                                     Yeah, i'm in
                                 </Button>

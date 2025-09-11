@@ -15,7 +15,7 @@ const LogoutButton = () => {
 
     return (
         <Flex
-            bg={isLoading ? "#1a1f37" : "transparent"}
+            bg={isLoading ? "#482610ff" : "transparent"}
             px={4}
             py={3}
             // height={"40px"}
@@ -33,8 +33,8 @@ const LogoutButton = () => {
                 height={"30px"}
                 justifyContent={"center"}
                 alignItems={"center"}
-                bg={isLoading ? "red.400" : "#191e36"}
-                color={isLoading ? "white" : "red.400"}
+                bg={isLoading ? "#FF7D29" : "#482610ff"}
+                color={isLoading ? "white" : "#FF7D29"}
                 borderRadius={"10px"}
             >
                 {isLoading ? (

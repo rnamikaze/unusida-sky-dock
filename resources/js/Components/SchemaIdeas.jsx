@@ -35,7 +35,8 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
             <Flex width={"100%"} justifyContent={"center"}>
                 <Flex direction={"column"} alignItems={"center"} gap={2}>
                     <Flex
-                        borderRadius={"full"}
+                        borderTopRadius={"16px"}
+                        borderBottomRadius={"full"}
                         width={"100px"}
                         height={"100px"}
                         border={"4px"}
@@ -43,7 +44,7 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
-                        color="#0154bf"
+                        color="#7B4019"
                         style={
                             value == 2
                                 ? {
@@ -68,7 +69,8 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
             <Flex gap={"10px"} width={"100%"} justifyContent={"space-between"}>
                 <Flex direction={"column"} gap={2} alignItems={"center"}>
                     <Flex
-                        borderRadius={"full"}
+                        borderTopRadius={"16px"}
+                        borderBottomRadius={"full"}
                         width={"80px"}
                         height={"80px"}
                         border={"4px"}
@@ -76,7 +78,7 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
-                        color="#0154bf"
+                        color="#7B4019"
                         style={
                             value == 1
                                 ? {
@@ -166,7 +168,8 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                 </Flex>
                 <Flex direction={"column"} gap={2} alignItems={"center"}>
                     <Flex
-                        borderRadius={"full"}
+                        borderTopRadius={"16px"}
+                        borderBottomRadius={"full"}
                         width={"80px"}
                         height={"80px"}
                         border={"4px"}
@@ -174,7 +177,7 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                         justifyContent={"center"}
                         alignItems={"center"}
                         bg={"white"}
-                        color="#0154bf"
+                        color="#7B4019"
                         style={
                             value == 3
                                 ? {
