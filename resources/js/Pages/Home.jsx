@@ -119,9 +119,9 @@ const Home = ({ message }) => {
                         Welcome To
                     </Flex>
                     <Flex className="asimovian-regular" fontSize={"60px"}>
-                        SKY DOCK
+                        EMPIRE WAY
                     </Flex>
-                    <Flex>App Data Docking Manager</Flex>
+                    <Flex>We're going RIGHT, always.</Flex>
                 </Flex>
 
                 <SchemaIdeas />
@@ -148,7 +148,7 @@ const Home = ({ message }) => {
                                     padding: "0px 5px",
                                 }}
                             >
-                                SKY DOCK&trade;
+                                EMPIRE WAY&trade;
                             </div>
                             Registered network.
                         </Text>

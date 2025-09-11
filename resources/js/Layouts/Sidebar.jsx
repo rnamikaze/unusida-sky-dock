@@ -52,7 +52,7 @@ const Sidebar = ({
                     >
                         <EqualApproximately size={22} />
                     </Flex>{" "}
-                    <Flex>SKY DOCK</Flex>
+                    <Flex>EMPIRE WAY</Flex>
                 </Flex>
                 <Flex
                     cursor={"pointer"}

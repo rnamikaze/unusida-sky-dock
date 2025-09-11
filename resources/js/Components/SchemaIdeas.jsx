@@ -62,7 +62,7 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                     >
                         <Cloud size={70} />
                     </Flex>
-                    <Flex fontStyle={"italic"}>SKY DOCK</Flex>
+                    <Flex fontStyle={"italic"}>EMPIRE WAY</Flex>
                 </Flex>
             </Flex>
             <Flex gap={"10px"} width={"100%"} justifyContent={"space-between"}>
@@ -95,7 +95,7 @@ const SchemaIdeas = ({ zoom = ["0.8", "1.1"] }) => {
                     >
                         <KeySquare size={44} />
                     </Flex>
-                    <Flex fontStyle={"italic"}>DOCK IN</Flex>
+                    <Flex fontStyle={"italic"}>KNIGHT IN</Flex>
                 </Flex>
                 <Flex
                     height={"60px"}

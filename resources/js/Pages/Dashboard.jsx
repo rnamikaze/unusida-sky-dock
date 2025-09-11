@@ -83,7 +83,7 @@ const Dashboard = () => {
                     >
                         <Flex>Welcome to</Flex>
                         <Flex className="asimovian-regular" fontSize={"30px"}>
-                            SKY DOCK
+                            EMPIRE WAY
                         </Flex>
                         <Flex
                             // bg={"yellow"}
