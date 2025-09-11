@@ -16,7 +16,9 @@ class TokenDecks extends Model
         "user_id",
         "is_active",
         "user_agent",
-        "ip_address"
+        "ip_address",
+        "special_id",
+        "issuer"
     ];
 
     public function accessToken()

@@ -20,21 +20,38 @@ class IssueControllers extends Controller
 
         $user["user_agent"] = $token->user_agent;
         $user["ip_address"] = $token->ip_address;
+        $user["special_id"] = $token->special_id;
+        $appGateKey = env("ERABOUR_GATE_KEY");
 
         try {
             $response = Http::acceptJson()
                 ->post($endpoint, [
                     'user' => json_encode($user),
                     'token' => $token->token,
-                    'key' => "8b125078a2ddf3e76514098cc347dcfd6559233bd97af00da8178cc1eeb0414e"
+                    'key' => $appGateKey
                 ]);
 
             // return $response->json();
 
-            return [
-                'success' => true,
-                'response' => $response->json()
-            ];
+            $contentType = $response->header('Content-Type');
+
+            if (str_contains($contentType, 'application/json')) {
+                return [
+                    'success' => true,
+                    'response' => $response->json()
+                ];
+            } elseif (str_contains($contentType, 'text/html')) {
+                // Likely Cloudflare page or some error HTML
+                // $html = $response->body();
+                // Handle accordingly
+                return [
+                    'success' => false,
+                    'status' => "html",
+                    'error' => "received html page",
+                ];
+            }
+
+
         } catch (RequestException $e) {
             // Get status code
             $status = $e->response->status();
@@ -198,6 +215,7 @@ class IssueControllers extends Controller
                     "message" => "failed to authenticate 2"
                 ], 500);
             }
+
             $user = $request->user();
 
             return response()->json([

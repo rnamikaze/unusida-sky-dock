@@ -29,6 +29,7 @@ Route::prefix("issue")->group(function () {
 
 Route::prefix("dock")->group(function () {
     Route::post("initiate", [DocksControllers::class, "initiate"]);
+    Route::post("prepare", [DocksControllers::class, "dockPrepare"]);
 });
 
 Route::prefix("gateway")->group(function () {
