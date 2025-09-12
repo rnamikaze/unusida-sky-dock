@@ -13,7 +13,7 @@ import {
     UserRoundCheck,
     UsersRound,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Head } from "@inertiajs/react";
 import DashboardPane from "@/Layouts/DashboardPane";
 import SchemaIdeas from "@/Components/SchemaIdeas";
@@ -52,8 +52,9 @@ const sidebarItem = [
         icon: <LayoutGrid size={20} />,
     },
 ];
-const Dashboard = () => {
+const Dashboard = ({ user }) => {
     const [sidebarExpand, setSidebarExpand] = useState(false);
+    const [logedInUser, setLogedInUser] = useState(false);
 
     const [viewActive, setViewActive] = useState({
         id: 6,
@@ -83,6 +84,7 @@ const Dashboard = () => {
                         justifyContent={"center"}
                         alignItems={"center"}
                         width={"100%"}
+                        maxWidth={"100vw"}
                         direction={"column"}
                     >
                         <Flex>Welcome to</Flex>
@@ -93,6 +95,8 @@ const Dashboard = () => {
                             // bg={"yellow"}
                             justifyContent={"center"}
                             width={"100%"}
+                            maxWidth={"80vw"}
+                            overflowX={"hidden"}
                         >
                             <SchemaIdeas zoom={["0.6", "0.9"]} />
                         </Flex>
@@ -100,6 +104,12 @@ const Dashboard = () => {
                 );
         }
     };
+
+    useEffect(() => {
+        if (user) {
+            setLogedInUser(user);
+        }
+    }, [user]);
 
     return (
         <Flex
@@ -141,8 +151,8 @@ const Dashboard = () => {
                     ]}
                     // direction={"column"}
                     bg={[
-                        "linear-gradient(to bottom, #050b26, #071333)",
-                        "linear-gradient(to bottom, #050b26, #071333)",
+                        "linear-gradient(to bottom, #261805ff, #332407ff)",
+                        "linear-gradient(to bottom, #261805ff, #332407ff)",
                         "transparent",
                         "transparent",
                     ]}
@@ -161,12 +171,7 @@ const Dashboard = () => {
                     >
                         <Menu size={20} />
                     </Flex>
-                    <UserRound
-                        user={{
-                            name: "Fitzgerald Kenedy",
-                            email: "rnamikaze@proton.me",
-                        }}
-                    />
+                    <UserRound user={logedInUser} />
                 </Flex>
                 <Flex
                     flexGrow={1}

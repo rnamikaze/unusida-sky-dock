@@ -12,7 +12,7 @@ const Sidebar = ({
 }) => {
     return (
         <Flex
-            height={"100%"}
+            height={["95%", "95%", "100%", "100%"]}
             width={"250px"}
             bg={"linear-gradient(to bottom, #261805ff, #332407ff)"}
             borderRadius={"16px"}

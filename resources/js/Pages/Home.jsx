@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import { Head } from "@inertiajs/react";
 import SchemaIdeas from "@/Components/SchemaIdeas";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Login from "@/Layouts/Login";
 
 const isDebug = import.meta.env.VITE_APP_DEBUG == "true";

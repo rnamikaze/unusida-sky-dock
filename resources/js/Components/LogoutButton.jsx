@@ -8,9 +8,23 @@ const LogoutButton = () => {
     const doLogout = () => {
         setIsLoading(true);
 
-        setTimeout(() => {
-            setIsLoading(false);
-        }, 3000);
+        // setTimeout(() => {
+        //     setIsLoading(false);
+        // }, 3000);
+
+        axios
+            .post("/admin/logout")
+            .then(function (response) {
+                // console.log(response);
+
+                if (response.status === 200) {
+                    window.location.href = "/";
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+                setIsLoading(false);
+            });
     };
 
     return (

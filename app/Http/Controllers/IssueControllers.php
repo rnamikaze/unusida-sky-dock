@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\AttemptLog;
 use App\Models\TokenDecks;
 use Laravel\Passport\Token;
 use App\Models\ExternalUser;
@@ -215,6 +216,17 @@ class IssueControllers extends Controller
                     "message" => "failed to authenticate 2"
                 ], 500);
             }
+
+            $token = $request->bearerToken();
+
+            $tokenDeck = TokenDecks::where("token", $token)->first();
+
+            $attempt = AttemptLog::create([
+                "user_id" => $tokenDeck->user_id,
+                "token_id" => $tokenDeck->id,
+                "action" => "allowed",
+                "event" => "verify"
+            ]);
 
             $user = $request->user();
 

@@ -5,6 +5,7 @@ import {
     InputGroup,
     InputRightAddon,
     Select,
+    Spinner,
 } from "@chakra-ui/react";
 import {
     ArrowDownUp,
@@ -33,6 +34,8 @@ const UsersTable = () => {
 
     const [isLoading, setIsLoading] = useState(false);
     const retrieveUsers = (page) => {
+        setIsLoading(true);
+
         axios
             .post(`/users/all?page=${page}`, {
                 search: search,
@@ -41,7 +44,7 @@ const UsersTable = () => {
                 sort_direction: sortModeDirection,
             })
             .then(function (response) {
-                console.log(response);
+                // console.log(response);
 
                 if (response.status === 200) {
                     setUsers(response.data.users.data);
@@ -52,9 +55,11 @@ const UsersTable = () => {
                         from: response.data.users.from,
                     });
                 }
+                setIsLoading(false);
             })
             .catch(function (error) {
-                console.log(error);
+                // console.log(error);
+                setIsLoading(false);
             });
     };
 
@@ -176,23 +181,40 @@ const UsersTable = () => {
                     </Flex>
                 </Flex>
                 <Flex
-                    maxHeight={window.innerHeight - 190}
+                    minHeight={window.innerHeight - 258}
+                    maxHeight={window.innerHeight - 258}
                     direction={"column"}
                     gap={1}
                     overflowY={"auto"}
                     pb={"10px"}
                     pr={"10px"}
+                    flexGrow={1}
                 >
-                    {users.map((user, index) => {
-                        return (
-                            <TableItem
-                                key={user.id}
-                                item={user}
-                                from={paginationProps.from}
-                                index={index}
-                            />
-                        );
-                    })}
+                    {isLoading ? (
+                        <Flex
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                            height={"100%"}
+                            direction={"column"}
+                            gap={2}
+                        >
+                            <Spinner thickness="5px" size={"lg"} />
+                            <Flex fontWeight={"bold"} letterSpacing={"2px"}>
+                                LOADING
+                            </Flex>
+                        </Flex>
+                    ) : (
+                        users.map((user, index) => {
+                            return (
+                                <TableItem
+                                    key={user.id}
+                                    item={user}
+                                    from={paginationProps.from}
+                                    index={index}
+                                />
+                            );
+                        })
+                    )}
                 </Flex>
                 <Pagination
                     currentPage={paginationProps.page}

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthControllers;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -20,8 +21,11 @@ use App\Http\Controllers\ProfileController;
 
 Route::get("/", function () {
     return Inertia::render("Home");
-})->name("home");
+})->middleware("guest:admin")->name("home");
 
-Route::get("/dashboard", [PageControllers::class, "dashboard"])->middleware(["auth:admin"])->name('login');
+Route::get("/dashboard", [PageControllers::class, "dashboard"])->middleware(["auth:admin"]);
+
+Route::post("/admin/login", [AuthControllers::class, "adminLogin"]);
+Route::post("/admin/logout", [AuthControllers::class, "adminLogout"]);
 
 require __DIR__ . '/web/users.php';
