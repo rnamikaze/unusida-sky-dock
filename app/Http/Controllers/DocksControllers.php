@@ -126,6 +126,22 @@ class DocksControllers extends Controller
             $localUser = User::where('ext_dat_id', $extId)
                 ->with(['trafficStatus'])->first();
 
+            $localUser = User::where('ext_dat_id', $extId)
+                ->with(['trafficStatus'])
+                ->first();
+
+            if (!$localUser->trafficStatus) {
+                $trafficStatus = UserTrafficStatus::create([
+                    "user_id" => $localUser->id,
+                    "allow" => true
+                ]);
+
+                // attach the newly created relation to the model so you can use it right away
+                $localUser->setRelation('trafficStatus', $trafficStatus);
+            } else {
+                $trafficStatus = $localUser->trafficStatus;
+            }
+
             if (!$localUser) {
                 $externalUser = ExternalUser::where('id', $extId)->first();
 

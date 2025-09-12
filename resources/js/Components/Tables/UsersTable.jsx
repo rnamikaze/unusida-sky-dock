@@ -168,43 +168,57 @@ const UsersTable = () => {
                                 </Flex>
                                 <Flex>{selectedUser?.name}</Flex>
                                 <Flex>{selectedUser?.email}</Flex>
-                                <Divider my={2} />
-                                <Flex>
-                                    <FormControl
-                                        display="flex"
-                                        // alignItems="center"
-                                        flexDirection={"column"}
-                                    >
-                                        <FormLabel
-                                            htmlFor="email-alerts"
-                                            mb="0"
-                                        >
-                                            Traffic Request
-                                        </FormLabel>
-                                        <Flex alignItems={"center"}>
-                                            <Switch
-                                                id="email-alerts"
-                                                isChecked={selectedUserReqAllow}
-                                                colorScheme="orange"
-                                                onChange={(e) => {
-                                                    setSelectedUserReqAllow(
-                                                        e.target.checked
-                                                    );
-                                                }}
-                                                isDisabled={isUpdating}
-                                            />
-                                            <Flex ml={2} fontWeight={"bold"}>
-                                                {selectedUserReqAllow
-                                                    ? "Allowed"
-                                                    : "Blocked"}
-                                            </Flex>
+                                {trafficStatus ? (
+                                    <>
+                                        {" "}
+                                        <Divider my={2} />
+                                        <Flex>
+                                            <FormControl
+                                                display="flex"
+                                                // alignItems="center"
+                                                flexDirection={"column"}
+                                            >
+                                                <FormLabel
+                                                    htmlFor="email-alerts"
+                                                    mb="0"
+                                                >
+                                                    Traffic Request
+                                                </FormLabel>
+                                                <Flex alignItems={"center"}>
+                                                    <Switch
+                                                        id="email-alerts"
+                                                        isChecked={
+                                                            selectedUserReqAllow
+                                                        }
+                                                        colorScheme="orange"
+                                                        onChange={(e) => {
+                                                            setSelectedUserReqAllow(
+                                                                e.target.checked
+                                                            );
+                                                        }}
+                                                        isDisabled={isUpdating}
+                                                    />
+                                                    <Flex
+                                                        ml={2}
+                                                        fontWeight={"bold"}
+                                                    >
+                                                        {selectedUserReqAllow
+                                                            ? "Allowed"
+                                                            : "Blocked"}
+                                                    </Flex>
+                                                </Flex>
+                                            </FormControl>
                                         </Flex>
-                                    </FormControl>
-                                </Flex>
-                                <Flex mt={4}>Last Modified</Flex>
-                                <Flex>
-                                    {formatTimestamp(trafficStatus?.updated_at)}
-                                </Flex>
+                                        <Flex mt={4}>Last Modified</Flex>
+                                        <Flex>
+                                            {formatTimestamp(
+                                                trafficStatus?.updated_at
+                                            )}
+                                        </Flex>
+                                    </>
+                                ) : (
+                                    ""
+                                )}
                             </Flex>
                         </ModalBody>
 
@@ -220,6 +234,7 @@ const UsersTable = () => {
                                 onClick={() => {
                                     updateReqAllow();
                                 }}
+                                isDisabled={!trafficStatus}
                             >
                                 Apply
                             </Button>
@@ -439,9 +454,10 @@ const UsersTable = () => {
                                     handleClick={(e) => {
                                         setSelectedUser(e);
                                         setSelectedUserReqAllow(
-                                            e.traffic_status.allow == 1
+                                            e?.traffic_status?.allow == 1 ||
+                                                false
                                         );
-                                        setTrafficStatus(e.traffic_status);
+                                        setTrafficStatus(e?.traffic_status);
                                         onOpen();
                                     }}
                                 />
