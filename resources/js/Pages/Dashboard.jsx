@@ -1,6 +1,7 @@
 import Sidebar from "@/Layouts/Sidebar";
 import { Flex } from "@chakra-ui/react";
 import "../../css/fonts.css";
+import "../../css/style.css";
 import {
     ArrowDownUp,
     CircleUserRound,
@@ -19,6 +20,7 @@ import DashboardPane from "@/Layouts/DashboardPane";
 import SchemaIdeas from "@/Components/SchemaIdeas";
 import UserRound from "@/Components/UserRound";
 import Users from "@/Layouts/Users";
+import TrafficLogs from "@/Layouts/TrafficLogs";
 
 const sidebarItem = [
     {
@@ -73,6 +75,9 @@ const Dashboard = ({ user }) => {
         switch (viewCode) {
             case 1:
                 return <DashboardPane viewActive={viewActive} />;
+
+            case 2:
+                return <TrafficLogs viewActive={viewActive} />;
 
             case 3:
                 return <Users viewActive={viewActive} />;

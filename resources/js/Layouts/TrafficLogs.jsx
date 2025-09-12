@@ -1,8 +1,9 @@
 import BreadCrumbPane from "@/Components/BreadCrumbPane";
+import TrafficLogsTable from "@/Components/Tables/TrafficLogsTable";
 import UsersTable from "@/Components/Tables/UsersTable";
 import { Flex } from "@chakra-ui/react";
 
-const Users = ({ viewActive }) => {
+const TrafficLogs = ({ viewActive }) => {
     return (
         <Flex direction={"column"} gap={2} width={"100%"}>
             <BreadCrumbPane />
@@ -24,9 +25,9 @@ const Users = ({ viewActive }) => {
                     {viewActive.title}
                 </Flex>
             </Flex>
-            <UsersTable />
+            <TrafficLogsTable />
         </Flex>
     );
 };
 
-export default Users;
+export default TrafficLogs;

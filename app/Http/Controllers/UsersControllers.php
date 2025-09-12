@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\UserTrafficStatus;
 use Illuminate\Http\Request;
 
 class UsersControllers extends Controller
@@ -17,6 +18,7 @@ class UsersControllers extends Controller
         // Base query
         $query = User::with([
             'tokenDecksLatest:id,token_decks.user_id,ip_address',
+            'trafficStatus',
             'attemptLatest:id,attempt_logs.user_id,created_at'
         ]);
 
@@ -40,5 +42,31 @@ class UsersControllers extends Controller
         return response()->json([
             'users' => $users
         ]);
+    }
+
+    public function updateSetting(Request $request)
+    {
+        $validator = \Validator::make($request->all(), [
+            "user_id" => "required|numeric",
+            "allow" => "required|boolean"
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => "Failed"
+            ], 500);
+        }
+
+        $trafficStatus = UserTrafficStatus::where("user_id", $request->input("user_id"))->first();
+
+        $trafficStatus->allow = boolval($request->input("allow"));
+
+        $trafficStatus->save();
+
+        return response()->json([
+            "success" => true,
+            "traffic_status" => $trafficStatus
+        ], 200);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\AttemptLog;
 use App\Models\User;
 use App\Models\TokenDecks;
 use App\Models\ExternalUser;
+use App\Models\UserTrafficStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Http;
@@ -122,7 +123,8 @@ class DocksControllers extends Controller
             $issuer = $request->input("issuer");
 
             // check
-            $localUser = User::where('ext_dat_id', $extId)->first();
+            $localUser = User::where('ext_dat_id', $extId)
+                ->with(['trafficStatus'])->first();
 
             if (!$localUser) {
                 $externalUser = ExternalUser::where('id', $extId)->first();
@@ -136,6 +138,11 @@ class DocksControllers extends Controller
                         'password' => $externalUser->password, // keep hash synced
                     ]
                 );
+
+                $trafficStatus = UserTrafficStatus::create([
+                    "user_id" => $localUser->id,
+                    "allow" => true
+                ]);
             }
 
             // =>
@@ -214,6 +221,13 @@ class DocksControllers extends Controller
                 ]);
 
                 $data = $this->sendRequestToAppGate($newTokenDeck, $localUser, "$appHost/api/gate", $appKey);
+
+                $attempt = AttemptLog::create([
+                    "user_id" => $localUser->id,
+                    "token_id" => $newTokenDeck->id,
+                    "action" => "allowed",
+                    "event" => "initiate"
+                ]);
 
                 return response()->json([
                     'token' => $token,

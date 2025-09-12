@@ -14,26 +14,23 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
-    Button,
-    FormLabel,
-    FormControl,
-    Switch,
 } from "@chakra-ui/react";
 import {
     ArrowDownUp,
     OctagonMinus,
     Search,
     TrendingUpDown,
+    ClockArrowUp,
+    Network,
+    UserRound,
 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import TableItem from "./TableItem";
-import Pagination from "./Pagination";
 import { formatTimestamp } from "@/Functions/dateOps";
+import { useEffect, useRef, useState } from "react";
+import Pagination from "./Pagination";
 
-const tableWidth = ["10%", "10%", "40%", "30%", "10%"];
+const tableWidth = ["10%", "15%", "19%", "19%", "19%", "18%"];
 
-const UsersTable = () => {
-    const { isOpen, onOpen, onClose } = useDisclosure();
+const TrafficLogsTable = () => {
     const [users, setUsers] = useState([]);
     const [perPage, setPerPage] = useState("25");
     const [search, setSearch] = useState("");
@@ -46,17 +43,12 @@ const UsersTable = () => {
         from: 1,
     });
 
-    // Edit Val
-    const [selectedUser, setSelectedUser] = useState(null);
-    const [selectedUserReqAllow, setSelectedUserReqAllow] = useState(false);
-    const [trafficStatus, setTrafficStatus] = useState(null);
-
     const [isLoading, setIsLoading] = useState(false);
     const retrieveUsers = (page = 1) => {
         setIsLoading(true);
 
         axios
-            .post(`/users/all?page=${page}`, {
+            .post(`/traffics/all?page=${page}`, {
                 search: search,
                 per_page: parseInt(perPage),
                 sort_mode: sortMode,
@@ -79,34 +71,6 @@ const UsersTable = () => {
             .catch(function (error) {
                 // console.log(error);
                 setIsLoading(false);
-            });
-    };
-
-    const [isUpdating, setIsUpdating] = useState(false);
-    const updateReqAllow = () => {
-        setIsUpdating(true);
-
-        // setTimeout(() => {
-        //     setIsUpdating(false);
-        // }, 3000);
-
-        axios
-            .post("/users/update-setting", {
-                user_id: selectedUser?.id,
-                allow: selectedUserReqAllow,
-            })
-            .then(function (response) {
-                console.log(response);
-
-                if (response.status === 200) {
-                    retrieveUsers();
-                    setTrafficStatus(response.data.traffic_status);
-                }
-                setIsUpdating(false);
-            })
-            .catch(function (error) {
-                console.log(error);
-                setIsUpdating(false);
             });
     };
 
@@ -138,95 +102,7 @@ const UsersTable = () => {
     return (
         <>
             <Flex justifyContent={"flex-start"} gap={1}>
-                <Modal isOpen={isOpen} onClose={onClose}>
-                    <ModalOverlay />
-                    <ModalContent
-                        bg={"transparent"}
-                        className="white-glass"
-                        color={"white"}
-                        mx={"15px"}
-                        borderRadius={"16px"}
-                        mt={"20vh"}
-                    >
-                        <ModalHeader>Manage User</ModalHeader>
-                        <ModalCloseButton />
-                        <ModalBody>
-                            <Flex direction={"column"}>
-                                <Flex>
-                                    <Button
-                                        variant="solid"
-                                        borderRadius={"full"}
-                                        colorScheme="orange"
-                                        size={"sm"}
-                                    >
-                                        Load Master User Data
-                                    </Button>
-                                </Flex>
-                                <Divider my={2} />
-                                <Flex fontWeight={"bold"}>
-                                    USER ID {selectedUser?.ext_dat_id}
-                                </Flex>
-                                <Flex>{selectedUser?.name}</Flex>
-                                <Flex>{selectedUser?.email}</Flex>
-                                <Divider my={2} />
-                                <Flex>
-                                    <FormControl
-                                        display="flex"
-                                        // alignItems="center"
-                                        flexDirection={"column"}
-                                    >
-                                        <FormLabel
-                                            htmlFor="email-alerts"
-                                            mb="0"
-                                        >
-                                            Traffic Request
-                                        </FormLabel>
-                                        <Flex alignItems={"center"}>
-                                            <Switch
-                                                id="email-alerts"
-                                                isChecked={selectedUserReqAllow}
-                                                colorScheme="orange"
-                                                onChange={(e) => {
-                                                    setSelectedUserReqAllow(
-                                                        e.target.checked
-                                                    );
-                                                }}
-                                                isDisabled={isUpdating}
-                                            />
-                                            <Flex ml={2} fontWeight={"bold"}>
-                                                {selectedUserReqAllow
-                                                    ? "Allowed"
-                                                    : "Blocked"}
-                                            </Flex>
-                                        </Flex>
-                                    </FormControl>
-                                </Flex>
-                                <Flex mt={4}>Last Modified</Flex>
-                                <Flex>
-                                    {formatTimestamp(trafficStatus?.updated_at)}
-                                </Flex>
-                            </Flex>
-                        </ModalBody>
-
-                        <ModalFooter>
-                            {/* <Button colorScheme="blue" mr={3} onClick={onClose}>
-                                Close
-                            </Button> */}
-                            <Button
-                                variant="solid"
-                                borderRadius={"full"}
-                                colorScheme="orange"
-                                isLoading={isUpdating}
-                                onClick={() => {
-                                    updateReqAllow();
-                                }}
-                            >
-                                Apply
-                            </Button>
-                        </ModalFooter>
-                    </ModalContent>
-                </Modal>
-                <InputGroup size={"sm"} width={"250px"}>
+                {/* <InputGroup size={"sm"} width={"250px"}>
                     <Input
                         borderLeftRadius={"8px"}
                         size={"sm"}
@@ -248,7 +124,7 @@ const UsersTable = () => {
                     >
                         <Search size={18} />
                     </InputRightAddon>
-                </InputGroup>
+                </InputGroup> */}
                 <Select
                     size={"sm"}
                     bg={"#2e2006"}
@@ -344,7 +220,7 @@ const UsersTable = () => {
                             ]}
                             px={2}
                         >
-                            NAME
+                            ACTION
                         </Flex>
                         <Flex
                             width={[
@@ -367,7 +243,7 @@ const UsersTable = () => {
                             ]}
                             px={2}
                         >
-                            EMAIL
+                            EVENT
                         </Flex>
                         <Flex
                             width={[
@@ -391,7 +267,31 @@ const UsersTable = () => {
                             px={2}
                             alignItems={"center"}
                         >
-                            <ArrowDownUp size={18} />
+                            ISSUER
+                        </Flex>
+                        <Flex
+                            width={[
+                                "max-content",
+                                "max-content",
+                                tableWidth[5],
+                                tableWidth[5],
+                            ]}
+                            minWidth={[
+                                "max-content",
+                                "max-content",
+                                tableWidth[5],
+                                tableWidth[5],
+                            ]}
+                            maxWidth={[
+                                "max-content",
+                                "max-content",
+                                tableWidth[5],
+                                tableWidth[5],
+                            ]}
+                            px={2}
+                            alignItems={"center"}
+                        >
+                            APP NAME
                         </Flex>
                     </Flex>
                 </Flex>
@@ -436,14 +336,6 @@ const UsersTable = () => {
                                     item={user}
                                     from={paginationProps.from}
                                     index={index}
-                                    handleClick={(e) => {
-                                        setSelectedUser(e);
-                                        setSelectedUserReqAllow(
-                                            e.traffic_status.allow == 1
-                                        );
-                                        setTrafficStatus(e.traffic_status);
-                                        onOpen();
-                                    }}
                                 />
                             );
                         })
@@ -461,4 +353,187 @@ const UsersTable = () => {
     );
 };
 
-export default UsersTable;
+const TableItem = ({ item, from, index }) => {
+    return (
+        <Flex
+            width={"100%"}
+            bg={"#F3E9DC"}
+            color={"gray.700"}
+            borderRadius={"8px"}
+            py={1}
+            cursor={"pointer"}
+            direction={"column"}
+        >
+            <Flex
+                width={"100%"}
+                pb={1}
+                // direction={["row", "row", "column", "column"]}
+                wrap={"wrap"}
+            >
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[0],
+                        tableWidth[0],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[0],
+                        tableWidth[0],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[0],
+                        tableWidth[0],
+                    ]}
+                    px={2}
+                    fontWeight={"bold"}
+                >
+                    {from + index}
+                </Flex>
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[1],
+                        tableWidth[1],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[1],
+                        tableWidth[1],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[1],
+                        tableWidth[1],
+                    ]}
+                    px={2}
+                >
+                    {item?.user?.ext_dat_id || "N/A"}
+                </Flex>
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[2],
+                        tableWidth[2],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[2],
+                        tableWidth[2],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[2],
+                        tableWidth[2],
+                    ]}
+                    px={2}
+                    textTransform={"capitalize"}
+                >
+                    {item?.action || "N/A"}
+                </Flex>
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[3],
+                        tableWidth[3],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[3],
+                        tableWidth[3],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[3],
+                        tableWidth[3],
+                    ]}
+                    px={2}
+                    textTransform={"capitalize"}
+                >
+                    {item?.event || "N/A"}
+                </Flex>
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[4],
+                        tableWidth[4],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[4],
+                        tableWidth[4],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[4],
+                        tableWidth[4],
+                    ]}
+                    px={2}
+                >
+                    {item?.token_deck?.issuer || "N/A"}
+                </Flex>
+                <Flex
+                    width={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[5],
+                        tableWidth[5],
+                    ]}
+                    minWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[5],
+                        tableWidth[5],
+                    ]}
+                    maxWidth={[
+                        "max-content",
+                        "max-content",
+                        tableWidth[5],
+                        tableWidth[5],
+                    ]}
+                    px={2}
+                >
+                    {item?.token_deck?.app_name || "N/A"}
+                </Flex>
+            </Flex>
+            <Divider borderColor={"#9c9c9aff"} />
+            <Flex
+                py={1}
+                justifyContent={"flex-start"}
+                px={2}
+                direction={["column", "column", "row", "row"]}
+                // wrap={"wrap"}
+            >
+                <Flex px={2} alignItems={"center"} gap={2}>
+                    <UserRound size={16} /> {item?.user?.name}
+                </Flex>
+                <Flex px={2} alignItems={"center"} gap={2}>
+                    <ClockArrowUp size={16} />
+                    {formatTimestamp(item?.created_at)}
+                </Flex>
+                <Flex px={2} alignItems={"center"} gap={2}>
+                    <Network size={16} /> Last IP{" "}
+                    {item?.token_deck?.ip_address || "N/A"}
+                </Flex>
+            </Flex>
+        </Flex>
+    );
+};
+
+export default TrafficLogsTable;

@@ -13,7 +13,7 @@ const Sidebar = ({
     return (
         <Flex
             height={["95%", "95%", "100%", "100%"]}
-            width={"250px"}
+            width={"270px"}
             bg={"linear-gradient(to bottom, #261805ff, #332407ff)"}
             borderRadius={"16px"}
             direction={"column"}
@@ -35,12 +35,12 @@ const Sidebar = ({
                 width={"100%"}
                 // justifyContent={"center"}
                 alignItems={"center"}
-                fontSize={"20px"}
+                fontSize={"22px"}
                 className="asimovian-regular"
                 px={4}
                 justifyContent={"space-between"}
             >
-                <Flex gap={3}>
+                <Flex gap={3} alignItems={"center"}>
                     <Flex
                         bg={"white"}
                         color={"black"}
@@ -90,6 +90,21 @@ const Sidebar = ({
                 })}
             </Flex>
             <LogoutButton />
+            <Flex
+                justifyContent={"center"}
+                fontSize={"12px"}
+                fontWeight={"bold"}
+                color={"#ff7d29"}
+                gap={3}
+                alignItems={"center"}
+                lineHeight={"1.2em"}
+                textAlign={"center"}
+            >
+                <Flex fontSize={"22px"}>//</Flex> SPARKLABZ.CLOUD
+                <br />
+                Update {new Date().getDate()}-{new Date().getMonth()}-
+                {new Date().getFullYear()} <Flex fontSize={"22px"}>//</Flex>
+            </Flex>
         </Flex>
     );
 };

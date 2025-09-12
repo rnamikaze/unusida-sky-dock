@@ -27,7 +27,7 @@ export default function Pagination({ currentPage, lastPage, onPageChange }) {
     };
 
     return (
-        <HStack spacing={2}>
+        <HStack wrap={"wrap"} justifyContent={"center"} spacing={2}>
             {/* First button */}
             <Button
                 onClick={() => onPageChange(1)}

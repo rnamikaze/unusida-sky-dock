@@ -70,4 +70,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(AttemptLog::class, 'user_id', 'id')->latestOfMany();
     }
+
+    public function trafficStatus()
+    {
+        return $this->hasOne(UserTrafficStatus::class, 'user_id', 'id');
+    }
 }

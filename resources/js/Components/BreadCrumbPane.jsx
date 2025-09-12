@@ -4,9 +4,18 @@ import Clock24h from "./HourClock";
 
 const BreadCrumbPane = () => {
     return (
-        <Flex lineHeight={"1.2em"} direction={"column"}>
-            <Flex gap={1}>
-                <Clock24h /> - {getDayName()}
+        <Flex
+            lineHeight={"1.2em"}
+            direction={["row", "row", "column", "column"]}
+            justifyContent={[
+                "flex-end",
+                "flex-end",
+                "flex-start",
+                "flex-start",
+            ]}
+        >
+            <Flex mr={1}>
+                <Clock24h />, {getDayName()}
             </Flex>
             <Flex>{getFormattedDate()}</Flex>
         </Flex>
