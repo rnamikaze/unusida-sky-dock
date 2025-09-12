@@ -18,7 +18,7 @@ class TrafficControllers extends Controller
         $query = AttemptLog::with([
             'user:id,ext_dat_id,name',
             'token_deck:id,app_name,issuer,ip_address'
-        ]);
+        ])->orderBy('created_at', 'desc');
 
         // Apply search
         // if (!empty($search)) {
@@ -28,11 +28,11 @@ class TrafficControllers extends Controller
         //     });
         // }
 
-        // Apply sorting
-        $allowedSorts = ['user_id', 'name', 'email'];
-        if (!empty($sortMode) && in_array($sortMode, $allowedSorts)) {
-            $query->orderBy($sortMode, $sortDirection);
-        }
+        // Apply sorting Later
+        // $allowedSorts = ['user_id', 'name', 'email'];
+        // if (!empty($sortMode) && in_array($sortMode, $allowedSorts)) {
+        //     $query->orderBy($sortMode, $sortDirection);
+        // }
 
         // Apply pagination
         $users = $query->paginate($perPage);

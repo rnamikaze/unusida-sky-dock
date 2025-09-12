@@ -30,11 +30,11 @@ class UsersControllers extends Controller
             });
         }
 
-        // Apply sorting
-        $allowedSorts = ['user_id', 'name', 'email'];
-        if (!empty($sortMode) && in_array($sortMode, $allowedSorts)) {
-            $query->orderBy($sortMode, $sortDirection);
-        }
+        // Apply sorting Later
+        // $allowedSorts = ['user_id', 'name', 'email'];
+        // if (!empty($sortMode) && in_array($sortMode, $allowedSorts)) {
+        //     $query->orderBy($sortMode, $sortDirection);
+        // }
 
         // Apply pagination
         $users = $query->paginate($perPage);
