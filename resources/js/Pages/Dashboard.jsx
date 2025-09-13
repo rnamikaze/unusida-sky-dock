@@ -21,6 +21,7 @@ import SchemaIdeas from "@/Components/SchemaIdeas";
 import UserRound from "@/Components/UserRound";
 import Users from "@/Layouts/Users";
 import TrafficLogs from "@/Layouts/TrafficLogs";
+import Sessions from "@/Layouts/Sessions";
 
 const sidebarItem = [
     {
@@ -81,6 +82,9 @@ const Dashboard = ({ user }) => {
 
             case 3:
                 return <Users viewActive={viewActive} />;
+
+            case 5:
+                return <Sessions viewActive={viewActive} />;
 
             default:
                 return (

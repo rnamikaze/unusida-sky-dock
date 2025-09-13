@@ -30,3 +30,4 @@ Route::post("/admin/logout", [AuthControllers::class, "adminLogout"]);
 
 require __DIR__ . '/web/users.php';
 require __DIR__ . '/web/traffics.php';
+require __DIR__ . '/web/sessions.php';

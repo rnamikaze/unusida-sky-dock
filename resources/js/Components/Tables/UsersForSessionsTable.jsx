@@ -14,6 +14,12 @@ import {
     ModalBody,
     ModalCloseButton,
     useDisclosure,
+    Button,
+    FormLabel,
+    FormControl,
+    Switch,
+    Image,
+    useToast,
 } from "@chakra-ui/react";
 import {
     ArrowDownUp,
@@ -22,16 +28,16 @@ import {
     TrendingUpDown,
     ClockArrowUp,
     Network,
-    UserRound,
 } from "lucide-react";
-import { formatTimestamp } from "@/Functions/dateOps";
 import { useEffect, useRef, useState } from "react";
 import Pagination from "./Pagination";
+import { formatTimestamp } from "@/Functions/dateOps";
 import IconBgRounder from "../IconBgRounded";
 
-const tableWidth = ["10%", "15%", "19%", "19%", "19%", "18%"];
+const tableWidth = ["10%", "10%", "40%", "30%", "10%"];
 
-const TrafficLogsTable = () => {
+const UsersForSessionsTable = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const [users, setUsers] = useState([]);
     const [perPage, setPerPage] = useState("25");
     const [search, setSearch] = useState("");
@@ -44,12 +50,16 @@ const TrafficLogsTable = () => {
         from: 1,
     });
 
+    // Edit Val
+    const [selectedUser, setSelectedUser] = useState(null);
+    // const [browserSessionArray, setBrowserSessionArray] = useState([]);
+
     const [isLoading, setIsLoading] = useState(false);
     const retrieveUsers = (page = 1) => {
         setIsLoading(true);
 
         axios
-            .post(`/traffics/all?page=${page}`, {
+            .post(`/sessions/all?page=${page}`, {
                 search: search,
                 per_page: parseInt(perPage),
                 sort_mode: sortMode,
@@ -72,6 +82,34 @@ const TrafficLogsTable = () => {
             .catch(function (error) {
                 // console.log(error);
                 setIsLoading(false);
+            });
+    };
+
+    const [isUpdating, setIsUpdating] = useState(false);
+    const updateReqAllow = () => {
+        setIsUpdating(true);
+
+        // setTimeout(() => {
+        //     setIsUpdating(false);
+        // }, 3000);
+
+        axios
+            .post("/users/update-setting", {
+                user_id: selectedUser?.id,
+                allow: selectedUserReqAllow,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if (response.status === 200) {
+                    retrieveUsers();
+                    setTrafficStatus(response.data.traffic_status);
+                }
+                setIsUpdating(false);
+            })
+            .catch(function (error) {
+                console.log(error);
+                setIsUpdating(false);
             });
     };
 
@@ -103,7 +141,64 @@ const TrafficLogsTable = () => {
     return (
         <>
             <Flex justifyContent={"flex-start"} gap={1}>
-                {/* <InputGroup size={"sm"} width={"250px"}>
+                <Modal isOpen={isOpen} onClose={onClose}>
+                    <ModalOverlay />
+                    <ModalContent
+                        bg={"transparent"}
+                        className="white-glass"
+                        color={"white"}
+                        mx={"15px"}
+                        borderRadius={"16px"}
+                        mt={"20vh"}
+                    >
+                        <ModalHeader>Manage User</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <Flex direction={"column"} mb={"10px"}>
+                                <Flex fontWeight={"bold"}>
+                                    USER ID {selectedUser?.ext_dat_id}
+                                </Flex>
+                                <Flex>{selectedUser?.name}</Flex>
+                                <Divider my={1} />
+                                <Flex fontWeight={"bold"}>
+                                    {selectedUser?.token_decks.length > 0
+                                        ? `${selectedUser?.token_decks.length} Active Session`
+                                        : "No Session"}
+                                </Flex>
+                                <Flex direction={"column"} mt={2}>
+                                    {selectedUser?.token_decks.map((deck) => {
+                                        return (
+                                            <SessionItem
+                                                key={deck.id}
+                                                item={deck}
+                                                setSelectedUser={(e) => {
+                                                    retrieveUsers();
+                                                    setSelectedUser(e);
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </Flex>
+                            </Flex>
+                        </ModalBody>
+
+                        {/* <ModalFooter>
+
+                            <Button
+                                variant="solid"
+                                borderRadius={"full"}
+                                colorScheme="orange"
+                                isLoading={isUpdating}
+                                onClick={() => {
+                                    updateReqAllow();
+                                }}
+                            >
+                                Apply
+                            </Button>
+                        </ModalFooter> */}
+                    </ModalContent>
+                </Modal>
+                <InputGroup size={"sm"} width={"250px"}>
                     <Input
                         borderLeftRadius={"8px"}
                         size={"sm"}
@@ -125,7 +220,7 @@ const TrafficLogsTable = () => {
                     >
                         <Search size={18} />
                     </InputRightAddon>
-                </InputGroup> */}
+                </InputGroup>
                 <Select
                     size={"sm"}
                     bg={"#2e2006"}
@@ -221,7 +316,7 @@ const TrafficLogsTable = () => {
                             ]}
                             px={2}
                         >
-                            ACTION
+                            NAME
                         </Flex>
                         <Flex
                             width={[
@@ -244,7 +339,7 @@ const TrafficLogsTable = () => {
                             ]}
                             px={2}
                         >
-                            EVENT
+                            EMAIL
                         </Flex>
                         <Flex
                             width={[
@@ -264,35 +359,11 @@ const TrafficLogsTable = () => {
                                 "max-content",
                                 tableWidth[4],
                                 tableWidth[4],
-                            ]}
-                            px={2}
-                            alignItems={"center"}
-                        >
-                            ISSUER
-                        </Flex>
-                        <Flex
-                            width={[
-                                "max-content",
-                                "max-content",
-                                tableWidth[5],
-                                tableWidth[5],
-                            ]}
-                            minWidth={[
-                                "max-content",
-                                "max-content",
-                                tableWidth[5],
-                                tableWidth[5],
-                            ]}
-                            maxWidth={[
-                                "max-content",
-                                "max-content",
-                                tableWidth[5],
-                                tableWidth[5],
                             ]}
                             px={2}
                             alignItems={"center"}
                         >
-                            APP NAME
+                            SESSIONS
                         </Flex>
                     </Flex>
                 </Flex>
@@ -337,6 +408,11 @@ const TrafficLogsTable = () => {
                                     item={user}
                                     from={paginationProps.from}
                                     index={index}
+                                    handleClick={(e) => {
+                                        setSelectedUser(e);
+                                        // setBrowserSessionArray(e.token_decks)
+                                        onOpen();
+                                    }}
                                 />
                             );
                         })
@@ -354,7 +430,7 @@ const TrafficLogsTable = () => {
     );
 };
 
-const TableItem = ({ item, from, index }) => {
+const TableItem = ({ item, from, index, handleClick }) => {
     return (
         <Flex
             width={"100%"}
@@ -364,6 +440,9 @@ const TableItem = ({ item, from, index }) => {
             py={1}
             cursor={"pointer"}
             direction={"column"}
+            onClick={() => {
+                handleClick(item);
+            }}
         >
             <Flex
                 width={"100%"}
@@ -416,7 +495,7 @@ const TableItem = ({ item, from, index }) => {
                     ]}
                     px={2}
                 >
-                    {item?.user?.ext_dat_id || "N/A"}
+                    {item.ext_dat_id}
                 </Flex>
                 <Flex
                     width={[
@@ -438,9 +517,8 @@ const TableItem = ({ item, from, index }) => {
                         tableWidth[2],
                     ]}
                     px={2}
-                    textTransform={"capitalize"}
                 >
-                    {item?.action || "N/A"}
+                    {item.name}
                 </Flex>
                 <Flex
                     width={[
@@ -462,9 +540,8 @@ const TableItem = ({ item, from, index }) => {
                         tableWidth[3],
                     ]}
                     px={2}
-                    textTransform={"capitalize"}
                 >
-                    {item?.event || "N/A"}
+                    {item.email}
                 </Flex>
                 <Flex
                     width={[
@@ -487,30 +564,7 @@ const TableItem = ({ item, from, index }) => {
                     ]}
                     px={2}
                 >
-                    {item?.token_deck?.issuer || "N/A"}
-                </Flex>
-                <Flex
-                    width={[
-                        "max-content",
-                        "max-content",
-                        tableWidth[5],
-                        tableWidth[5],
-                    ]}
-                    minWidth={[
-                        "max-content",
-                        "max-content",
-                        tableWidth[5],
-                        tableWidth[5],
-                    ]}
-                    maxWidth={[
-                        "max-content",
-                        "max-content",
-                        tableWidth[5],
-                        tableWidth[5],
-                    ]}
-                    px={2}
-                >
-                    {item?.token_deck?.app_name || "N/A"}
+                    {item?.token_decks.length} Session
                 </Flex>
             </Flex>
             <Divider borderColor={"#9c9c9aff"} />
@@ -524,32 +578,124 @@ const TableItem = ({ item, from, index }) => {
                 // wrap={"wrap"}
             >
                 <Flex px={2} alignItems={"center"} gap={2}>
-                    <IconBgRounder
-                        bg={item?.action == "allowed" ? "blue.400" : "red.400"}
-                    >
-                        <UserRound size={16} />
+                    <IconBgRounder bg={"#ff7d29"} borderRadius="10px">
+                        <ArrowDownUp size={18} />
                     </IconBgRounder>
-                    {item?.user?.name}
                 </Flex>
-                <Flex px={2} alignItems={"center"} gap={2}>
-                    <IconBgRounder
-                        bg={item?.action == "allowed" ? "blue.400" : "red.400"}
-                    >
-                        <ClockArrowUp size={16} />
-                    </IconBgRounder>
-                    {formatTimestamp(item?.created_at)}
-                </Flex>
-                <Flex px={2} alignItems={"center"} gap={2}>
-                    <IconBgRounder
-                        bg={item?.action == "allowed" ? "blue.400" : "red.400"}
-                    >
-                        <Network size={14} />
-                    </IconBgRounder>{" "}
-                    {item?.token_deck?.ip_address || "N/A"}
+                <Flex gap={2}>
+                    {item?.token_decks.map((deck) => {
+                        return (
+                            <Flex>
+                                <Image
+                                    src={deck.browser_icon}
+                                    width={"26px"}
+                                    height={"26px"}
+                                />
+                            </Flex>
+                        );
+                    })}
                 </Flex>
             </Flex>
         </Flex>
     );
 };
 
-export default TrafficLogsTable;
+const SessionItem = ({ item, setSelectedUser }) => {
+    const [isRevoking, setIsRevoking] = useState(false);
+    const toast = useToast();
+
+    const revoke = () => {
+        setIsRevoking(true);
+
+        // setTimeout(() => {
+        //     setIsRevoking(false);
+
+        //     toast({
+        //         title: "Success",
+        //         description: "Session revoked !",
+        //         status: "success",
+        //         duration: 9000,
+        //         isClosable: true,
+        //     });
+        // }, 3000);
+        // return;
+
+        axios
+            .post("/sessions/revoke", {
+                app_name: item.app_name,
+                special_id: item.special_id,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                if (response.status === 200) {
+                    setSelectedUser(response.data.user);
+                    toast({
+                        title: "Success",
+                        description:
+                            response?.data?.message || "Session revoked !",
+                        status: "success",
+                        duration: 9000,
+                        isClosable: true,
+                    });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                toast({
+                    title: "Error",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                });
+            });
+    };
+    return (
+        <Flex
+            direction={"column"}
+            border={"1px"}
+            borderColor={"whiteAlpha.600"}
+            borderRadius={"10px"}
+            py={2}
+            px={2}
+            gap={2}
+        >
+            <Flex gap={2}>
+                <Flex
+                    width={"80px"}
+                    height={"80px"}
+                    justifyContent={"center"}
+                    alignItems={"center"}
+                    bg={"whiteAlpha.200"}
+                    borderRadius={"8px"}
+                >
+                    <Image
+                        width={"70px"}
+                        height={"70px"}
+                        src={item.browser_icon}
+                    />
+                </Flex>
+                <Flex direction={"column"} justifyContent={"center"}>
+                    <Flex>Browser: {item.browser_name}</Flex>
+                    <Flex>Version: {item.browser_version || "N/A"}</Flex>
+                    <Flex>IP: {item.ip_address}</Flex>
+                </Flex>
+            </Flex>
+            <Flex justifyContent={"flex-end"}>
+                <Button
+                    onClick={() => {
+                        revoke();
+                    }}
+                    colorScheme="red"
+                    borderRadius={"full"}
+                    isLoading={isRevoking}
+                >
+                    Revoke
+                </Button>
+            </Flex>
+        </Flex>
+    );
+};
+
+export default UsersForSessionsTable;

@@ -181,10 +181,7 @@ class IssueControllers extends Controller
 
             $tokenId = $token->id;
 
-            TokenDecks::where('oauth_access_token_id', $tokenId)->update([
-                "is_active" => false
-            ]);
-
+            TokenDecks::where('oauth_access_token_id', $tokenId)->delete();
             // revoke all token
             // $request->user()->tokens->each->revoke();
 
@@ -211,11 +208,11 @@ class IssueControllers extends Controller
                 ], 500);
             }
 
-            if (env("SKY_DOCK_KEY", "wow") !== $request->input("sky_dock_key")) {
-                return response()->json([
-                    "message" => "failed to authenticate 2"
-                ], 500);
-            }
+            // if (env("SKY_DOCK_KEY", "wow") !== $request->input("sky_dock_key")) {
+            //     return response()->json([
+            //         "message" => "failed to authenticate 2"
+            //     ], 500);
+            // }
 
             $token = $request->bearerToken();
 

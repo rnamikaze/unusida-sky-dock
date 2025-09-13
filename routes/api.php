@@ -23,13 +23,13 @@ use App\Http\Controllers\IssueControllers;
 
 Route::prefix("issue")->group(function () {
     // Route::post("make", [IssueControllers::class, "make"]);
-    Route::post("verify", [IssueControllers::class, "verify"])->middleware(["auth:api"]);
-    Route::post("revoke", [IssueControllers::class, "revokeToken"])->middleware(["auth:api"]);
+    Route::post("verify", [IssueControllers::class, "verify"])->middleware(["auth:api", 'skydock.gate']);
+    Route::post("revoke", [IssueControllers::class, "revokeToken"])->middleware(["auth:api", 'skydock.gate']);
 });
 
 Route::prefix("dock")->group(function () {
-    Route::post("initiate", [DocksControllers::class, "initiate"]);
-    Route::post("prepare", [DocksControllers::class, "dockPrepare"]);
+    Route::post("initiate", [DocksControllers::class, "initiate"])->middleware(['skydock.gate', 'traffic.status']);
+    Route::post("prepare", [DocksControllers::class, "dockPrepare"])->middleware(['skydock.gate', 'traffic.status.specialid']);
 });
 
 Route::prefix("gateway")->group(function () {

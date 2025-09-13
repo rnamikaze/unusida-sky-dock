@@ -6,6 +6,7 @@ import {
     OctagonMinus,
     TrendingUpDown,
 } from "lucide-react";
+import IconBgRounder from "../IconBgRounded";
 
 const tableWidth = ["10%", "10%", "40%", "30%", "10%"];
 
@@ -148,23 +149,45 @@ const TableItem = ({ item, from, index, handleClick }) => {
             </Flex>
             <Divider borderColor={"#9c9c9aff"} />
             <Flex
-                py={1}
+                pt={2}
+                pb={1}
                 justifyContent={"flex-start"}
                 px={2}
                 direction={["column", "column", "row", "row"]}
+                gap={1}
                 // wrap={"wrap"}
             >
                 <Flex px={2} alignItems={"center"} gap={2}>
-                    <TrendingUpDown size={16} /> Traffic Request{" "}
+                    <IconBgRounder
+                        bg={
+                            item?.traffic_status?.allow ? "blue.400" : "red.400"
+                        }
+                    >
+                        <TrendingUpDown size={14} />
+                    </IconBgRounder>
+                    Traffic Request{" "}
                     {item?.traffic_status?.allow ? "Allowed" : "Blocked"}
                 </Flex>
                 <Flex px={2} alignItems={"center"} gap={2}>
-                    <ClockArrowUp size={16} /> Last Attempt&nbsp;
+                    <IconBgRounder
+                        bg={
+                            item?.traffic_status?.allow ? "blue.400" : "red.400"
+                        }
+                    >
+                        <ClockArrowUp size={16} />
+                    </IconBgRounder>
+                    Last Attempt&nbsp;
                     {formatTimestamp(item?.attempt_latest?.created_at)}
                 </Flex>
                 <Flex px={2} alignItems={"center"} gap={2}>
-                    <Network size={16} /> Last IP{" "}
-                    {item?.token_decks_latest?.ip_address || "N/A"}
+                    <IconBgRounder
+                        bg={
+                            item?.traffic_status?.allow ? "blue.400" : "red.400"
+                        }
+                    >
+                        <Network size={16} />
+                    </IconBgRounder>
+                    Last IP {item?.token_decks_latest?.ip_address || "N/A"}
                 </Flex>
             </Flex>
         </Flex>

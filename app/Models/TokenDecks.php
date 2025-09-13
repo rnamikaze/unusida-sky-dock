@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\BrowserLogoHelper;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,26 @@ class TokenDecks extends Model
         "special_id",
         "issuer"
     ];
+
+    // Make sure custom attributes appear in JSON
+    protected $appends = ['browser_name', 'browser_version', 'browser_icon'];
+
+    public function getBrowserNameAttribute()
+    {
+        $info = BrowserLogoHelper::parseBrowser($this->user_agent ?? '');
+        return $info['name'];
+    }
+
+    public function getBrowserVersionAttribute()
+    {
+        $info = BrowserLogoHelper::parseBrowser($this->user_agent ?? '');
+        return $info['version'];
+    }
+
+    public function getBrowserIconAttribute()
+    {
+        return BrowserLogoHelper::getBrowserIcon($this->user_agent ?? '');
+    }
 
     public function accessToken()
     {
