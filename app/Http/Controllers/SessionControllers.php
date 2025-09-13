@@ -16,7 +16,10 @@ class SessionControllers extends Controller
 
         // Base query
         $query = User::with([
-            'tokenDecks:id,token_decks.user_id,ip_address,user_agent,special_id,app_name',
+            'tokenDecks' => function ($q) {
+                $q->select('id', 'user_id', 'ip_address', 'user_agent', 'special_id', 'app_name')
+                    ->where('is_active', true);
+            }
         ]);
 
         // Apply search
