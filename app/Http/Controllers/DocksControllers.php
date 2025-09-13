@@ -174,7 +174,7 @@ class DocksControllers extends Controller
                 ->where('is_active', true)->where('user_id', $localUser->id)
                 ->where('user_agent', $userAgent)->where('ip_address', $ipAddress)
                 ->where('app_name', $appName)->where('issuer', $issuer)
-                ->first();
+                ->where('is_active', true)->first();
 
             if (!$tokenDeck) {
                 return response()->json(['message' => 'not found t'], 404);
@@ -386,8 +386,11 @@ class DocksControllers extends Controller
 
             if (str_contains($contentType, 'application/json')) {
                 $data = $response->json();
+
                 $deleteToken = TokenDecks::where('special_id', $request->input('special_id'))->first();
-                $deleteToken->delete();
+                $deleteToken->is_active = false;
+                $deleteToken->save();
+
                 $userId = $deleteToken->user_id;
 
                 $user = User::where('id', $userId)

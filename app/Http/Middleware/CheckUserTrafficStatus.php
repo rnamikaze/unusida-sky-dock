@@ -54,7 +54,7 @@ class CheckUserTrafficStatus
             ->where('is_active', true)->where('user_id', $localUser->id)
             ->where('user_agent', $userAgent)->where('ip_address', $ipAddress)
             ->where('app_name', $appName)->where('issuer', $issuer)
-            ->first();
+            ->where('is_active', true)->first();
 
         if (!$tokenDeck) {
             $tokenResult = $localUser->createToken('SkyDock1');

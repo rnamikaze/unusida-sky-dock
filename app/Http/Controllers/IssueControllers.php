@@ -181,7 +181,10 @@ class IssueControllers extends Controller
 
             $tokenId = $token->id;
 
-            TokenDecks::where('oauth_access_token_id', $tokenId)->delete();
+            $deck = TokenDecks::where('oauth_access_token_id', $tokenId)->first();
+            $deck->is_active = false;
+            $deck->save();
+
             // revoke all token
             // $request->user()->tokens->each->revoke();
 
@@ -216,7 +219,8 @@ class IssueControllers extends Controller
 
             $token = $request->bearerToken();
 
-            $tokenDeck = TokenDecks::where("token", $token)->first();
+            $tokenDeck = TokenDecks::where("token", $token)
+                ->where('is_active', true)->first();
 
             $attempt = AttemptLog::create([
                 "user_id" => $tokenDeck->user_id,
