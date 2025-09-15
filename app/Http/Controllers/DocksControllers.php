@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AllowedAppsHelper;
 use App\Models\AttemptLog;
 use App\Models\User;
 use App\Models\TokenDecks;
@@ -21,18 +22,8 @@ class DocksControllers extends Controller
 
     public function __construct()
     {
-        $this->allowedApps = [
-            [
-                "id" => "erabour",
-                "host" => env("ERABOUR_HOST", null),
-                "key" => env("ERABOUR_GATE_KEY")
-            ],
-            [
-                "id" => "room-system",
-                "host" => env("ROOM_SYSTEM_HOST", null),
-                "key" => env("ROOM_SYSTEM_KEY")
-            ],
-        ];
+        $this->allowedApps = AllowedAppsHelper::checkAllowedApps();
+
         $this->recognizedIssuer = [
             [
                 "id" => "unusida_sso",

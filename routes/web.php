@@ -28,6 +28,7 @@ Route::get("/dashboard", [PageControllers::class, "dashboard"])->middleware(["au
 Route::post("/admin/login", [AuthControllers::class, "adminLogin"]);
 Route::post("/admin/logout", [AuthControllers::class, "adminLogout"]);
 
+require __DIR__ . '/web/apps.php';
 require __DIR__ . '/web/users.php';
 require __DIR__ . '/web/traffics.php';
 require __DIR__ . '/web/sessions.php';
