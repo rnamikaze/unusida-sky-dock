@@ -27,6 +27,7 @@ import {
     CloudCheck,
     LayoutGrid,
     Orbit,
+    Siren,
     SquareArrowOutUpRight,
     TriangleAlert,
     UserStar,
@@ -82,6 +83,8 @@ const Apps = ({ viewActive, user }) => {
                         `${selectedApps.host}/account/login/superadmin?ssid=${response.data.token}`,
                         "_blank"
                     );
+                    setSelectedApps(response.data.app);
+                    // setAlertText("Auth Success -> opening dashboard");
                 }
 
                 setIsSending(false);
@@ -91,6 +94,28 @@ const Apps = ({ viewActive, user }) => {
 
                 setAlertText(error?.response?.data?.error || "Error Happen");
                 setIsSending(false);
+            });
+    };
+
+    const [isTogglingManmode, setIsTogglingManmode] = useState(false);
+
+    const toggleManmode = (app_name) => {
+        setIsTogglingManmode(true);
+
+        axios
+            .post("/apps/toggle-manmode", {
+                app_name,
+            })
+            .then(function (response) {
+                console.log(response);
+
+                setSelectedApps(response.data.app);
+                setIsTogglingManmode(false);
+            })
+            .catch(function (error) {
+                console.log(error);
+
+                setIsTogglingManmode(false);
             });
     };
 
@@ -135,7 +160,12 @@ const Apps = ({ viewActive, user }) => {
                                 <Flex direction={"column"} mt={"10px"}>
                                     <Flex>Name: {user?.name}</Flex>
                                     <Flex>Email: {user?.email}</Flex>
-                                    <Flex>Last Login N/A</Flex>
+                                    <Flex>
+                                        Last Login{" "}
+                                        {formatTimestamp(
+                                            selectedApps?.hist?.last_login
+                                        )}
+                                    </Flex>
                                     <Flex
                                         fontSize={"14px"}
                                         mt={2}
@@ -159,9 +189,18 @@ const Apps = ({ viewActive, user }) => {
                                                 selectedApps?.id
                                             );
                                         }}
+                                        isDisabled={
+                                            !selectedApps?.s_available ||
+                                            selectedApps?.conf?.manmode
+                                        }
                                     >
                                         <SquareArrowOutUpRight size={14} />
-                                        <Flex>_superadmin</Flex>
+                                        <Flex>
+                                            _superadmin
+                                            {!selectedApps?.s_available
+                                                ? " unavailable"
+                                                : ""}
+                                        </Flex>
                                     </Button>
                                 </Flex>
                                 {alertText ? (
@@ -178,43 +217,199 @@ const Apps = ({ viewActive, user }) => {
                                 )}
                             </Flex>
                             <Divider my={2} borderStyle={"dashed"} />
-                            <Flex direction={"column"}>
-                                <Flex
-                                    fontWeight={"bold"}
-                                    gap={2}
-                                    alignItems={"center"}
-                                >
-                                    <Orbit size={20} /> App State
-                                </Flex>
-                                <Flex direction={"column"} my={"10px"}>
-                                    <Flex>Active since N/A</Flex>
-                                    <Flex>Maintenance since N/A</Flex>
-                                </Flex>
-                                <Flex justifyContent={"flex-end"} gap={2}>
-                                    <Button
-                                        variant="solid"
-                                        borderRadius={"10px"}
-                                        colorScheme="red"
-                                        // isLoading={isUpdating}
-                                        // isDisabled={!trafficStatus}
+                            {selectedApps.app_state ? (
+                                <Flex direction={"column"} gap={2}>
+                                    <Flex
+                                        fontWeight={"bold"}
                                         gap={2}
-                                        size={"sm"}
+                                        alignItems={"center"}
+                                        mb={1}
                                     >
-                                        Disable
-                                    </Button>
-                                    <Button
-                                        variant="solid"
-                                        borderRadius={"10px"}
-                                        colorScheme="purple"
-                                        // isLoading={isUpdating}
-                                        // isDisabled={!trafficStatus}
-                                        gap={2}
-                                        size={"sm"}
+                                        <Orbit size={20} /> App State
+                                    </Flex>
+                                    <Flex
+                                        direction={"column"}
+                                        border={"1px"}
+                                        borderColor={"whiteAlpha.500"}
+                                        borderRadius={"8px"}
+                                        px={3}
+                                        py={2}
                                     >
-                                        Maintenance Mode
-                                    </Button>
+                                        <Flex mb={2} gap={3}>
+                                            <Flex
+                                                width={"50px"}
+                                                justifyContent={"center"}
+                                                alignItems={"center"}
+                                                style={{
+                                                    filter: selectedApps?.conf
+                                                        ?.active
+                                                        ? "drop-shadow(0px 0px 10px yellow)"
+                                                        : "none",
+                                                }}
+                                                color={"white"}
+                                                opacity={
+                                                    selectedApps?.conf?.active
+                                                        ? 1
+                                                        : 0.3
+                                                }
+                                            >
+                                                <Siren size={42} />
+                                            </Flex>
+                                            <Flex
+                                                justifyContent={"flex-end"}
+                                                direction={"column"}
+                                                flexGrow={1}
+                                                fontSize={"14px"}
+                                            >
+                                                <Flex fontWeight={"bold"}>
+                                                    Active
+                                                </Flex>
+                                                <Flex>
+                                                    {selectedApps?.conf?.active
+                                                        ? "Running"
+                                                        : "Stopped"}{" "}
+                                                    Since
+                                                </Flex>
+                                                <Flex fontStyle={"italic"}>
+                                                    {formatTimestamp(
+                                                        selectedApps?.conf
+                                                            ?.active
+                                                            ? selectedApps?.hist
+                                                                  ?.last_active_enable
+                                                            : selectedApps?.hist
+                                                                  ?.last_active_disable
+                                                    )}
+                                                </Flex>
+                                            </Flex>
+                                        </Flex>
+                                        <Divider
+                                            mb={2}
+                                            borderStyle={"dashed"}
+                                            borderColor={"whiteAlpha.500"}
+                                        />
+                                        <Flex
+                                            width={"100%"}
+                                            justifyContent={"flex-end"}
+                                        >
+                                            <Button
+                                                variant="solid"
+                                                borderRadius={"10px"}
+                                                colorScheme="red"
+                                                // isLoading={isUpdating}
+                                                // isDisabled={!trafficStatus}
+                                                gap={2}
+                                                size={"sm"}
+                                                // onClick={() => {
+                                                //     toggleManmode(selectedApps?.id);
+                                                // }}
+                                                // isLoading={isTogglingManmode}
+                                                isDisabled={true}
+                                            >
+                                                {selectedApps?.conf?.manmode
+                                                    ? "Disable"
+                                                    : "Enable"}
+                                            </Button>
+                                        </Flex>
+                                    </Flex>
+                                    <Flex
+                                        direction={"column"}
+                                        border={"1px"}
+                                        borderColor={"whiteAlpha.500"}
+                                        borderRadius={"8px"}
+                                        px={3}
+                                        py={2}
+                                    >
+                                        <Flex mb={2} gap={3}>
+                                            <Flex
+                                                width={"50px"}
+                                                justifyContent={"center"}
+                                                alignItems={"center"}
+                                                style={{
+                                                    filter: selectedApps?.conf
+                                                        ?.manmode
+                                                        ? "drop-shadow(0px 0px 10px yellow)"
+                                                        : "none",
+                                                }}
+                                                color={"white"}
+                                                opacity={
+                                                    selectedApps?.conf?.manmode
+                                                        ? 1
+                                                        : 0.3
+                                                }
+                                            >
+                                                <Siren size={42} />
+                                            </Flex>
+                                            <Flex
+                                                justifyContent={"flex-end"}
+                                                direction={"column"}
+                                                flexGrow={1}
+                                                fontSize={"14px"}
+                                            >
+                                                <Flex fontWeight={"bold"}>
+                                                    Manmode
+                                                </Flex>
+                                                <Flex>
+                                                    {selectedApps?.conf?.manmode
+                                                        ? "Active"
+                                                        : "Disabled"}{" "}
+                                                    Since
+                                                </Flex>
+                                                <Flex fontStyle={"italic"}>
+                                                    {formatTimestamp(
+                                                        selectedApps?.conf
+                                                            ?.manmode
+                                                            ? selectedApps?.hist
+                                                                  ?.last_manmode_enable
+                                                            : selectedApps?.hist
+                                                                  ?.last_manmode_disable
+                                                    )}
+                                                </Flex>
+                                            </Flex>
+                                        </Flex>
+                                        <Divider
+                                            mb={2}
+                                            borderStyle={"dashed"}
+                                            borderColor={"whiteAlpha.500"}
+                                        />
+                                        <Flex
+                                            width={"100%"}
+                                            justifyContent={"flex-end"}
+                                        >
+                                            <Button
+                                                variant="solid"
+                                                borderRadius={"10px"}
+                                                colorScheme="red"
+                                                // isLoading={isUpdating}
+                                                // isDisabled={!trafficStatus}
+                                                gap={2}
+                                                size={"sm"}
+                                                onClick={() => {
+                                                    toggleManmode(
+                                                        selectedApps?.id
+                                                    );
+                                                }}
+                                                isLoading={isTogglingManmode}
+                                            >
+                                                {selectedApps?.conf?.manmode
+                                                    ? "Disable"
+                                                    : "Enable"}
+                                            </Button>
+                                        </Flex>
+                                    </Flex>
                                 </Flex>
-                            </Flex>
+                            ) : (
+                                <Flex direction={"column"} gap={2}>
+                                    <Flex
+                                        fontWeight={"bold"}
+                                        gap={2}
+                                        alignItems={"center"}
+                                        mb={1}
+                                    >
+                                        <Orbit size={20} /> App State
+                                    </Flex>
+                                    <Flex>Not Supported by App</Flex>
+                                </Flex>
+                            )}
                             {/* <Divider my={2} /> */}
                         </Flex>
                     </ModalBody>
@@ -260,6 +455,7 @@ const Apps = ({ viewActive, user }) => {
                             app={app}
                             onClick={(e) => {
                                 setSelectedApps(e);
+                                console.log(e);
                                 onOpen();
                             }}
                         />
